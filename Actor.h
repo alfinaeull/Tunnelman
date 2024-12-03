@@ -31,4 +31,56 @@ class Object : public GraphObject {
 
 };
 
+
+class Earth : public Object {
+	private:
+		
+	
+	public:
+		// constructor
+		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3)
+			: Object(TID_EARTH, startX, startY, dir, size, depth)
+		{
+			
+		}
+
+		// destructor
+		~Earth()
+		{
+
+		}
+};
+
+
+class Tunnelman : public Object {
+	private:
+
+
+	public:
+		// constructor
+		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0)
+			: Object(TID_PLAYER, startX, startY, dir, size, depth)
+		{
+
+		}
+
+		// destructor
+		~Tunnelman()
+		{
+
+		}
+
+		// limited doSomething method
+		void doSomething()
+		{
+			
+		}
+
+};
+
+
+
+
+
+
 #endif // ACTOR_H_
