@@ -11,6 +11,7 @@
 // forward declaration for StudentWorld ptr
 class StudentWorld;
 
+
 class Object : public GraphObject {
 	private:
 		StudentWorld* world;
@@ -49,8 +50,8 @@ class Earth : public Object {
 	
 	public:
 		// constructor
-		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3)
-			: Object(TID_EARTH, startX, startY, dir, size, depth)
+		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw)
+			: Object(TID_EARTH, startX, startY, dir, size, depth, sw)
 		{
 			
 		}
@@ -71,8 +72,8 @@ class Tunnelman : public Object {
 
 	public:
 		// constructor
-		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0)
-			: Object(TID_PLAYER, startX, startY, dir, size, depth)
+		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw)
+			: Object(TID_PLAYER, startX, startY, dir, size, depth, sw)
 		{
 			currX = startX;
 			currY = startY;
