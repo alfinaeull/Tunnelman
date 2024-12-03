@@ -2,14 +2,12 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
+#include "StudentWorld.h"
 
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 // contains base, Earth, and Tunnelman class declarations
 // and necessary constants
-
-// forward declaration for StudentWorld ptr
-class StudentWorld;
 
 
 class Object : public GraphObject {
@@ -18,7 +16,7 @@ class Object : public GraphObject {
 
 	public:
 		// constructor
-		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w)
+		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w = nullptr)
 			: GraphObject(imageID, startX, startY, dir, size, depth)
 		{
 			setVisible(true);
@@ -50,7 +48,7 @@ class Earth : public Object {
 	
 	public:
 		// constructor
-		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw)
+		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw = nullptr)
 			: Object(TID_EARTH, startX, startY, dir, size, depth, sw)
 		{
 			
@@ -58,6 +56,11 @@ class Earth : public Object {
 
 		// destructor
 		~Earth()
+		{
+
+		}
+
+		void doSomething()
 		{
 
 		}
@@ -72,7 +75,7 @@ class Tunnelman : public Object {
 
 	public:
 		// constructor
-		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw)
+		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw = nullptr)
 			: Object(TID_PLAYER, startX, startY, dir, size, depth, sw)
 		{
 			currX = startX;
