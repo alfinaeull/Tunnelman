@@ -6,33 +6,40 @@
 #include <string>
 
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
+// contains your StudentWorld class declaration
+
+
+// forward declaration for Earth and Tunnelman
+class Tunnelman;
+class Earth;
+
 
 class StudentWorld : public GameWorld
 {
-public:
-	StudentWorld(std::string assetDir)
-		: GameWorld(assetDir)
-	{
-	}
+	private:
+		Tunnelman* tunnelman;
+		Earth* earthField[64][60];
 
-	virtual int init()
-	{
-		return GWSTATUS_CONTINUE_GAME;
-	}
 
-	virtual int move()
-	{
-		// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
-		// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
-		decLives();
-		return GWSTATUS_PLAYER_DIED;
-	}
+	public:
+		// constructor
+		StudentWorld(std::string assetDir);
 
-	virtual void cleanUp()
-	{
-	}
+		// destructor
+		~StudentWorld();
 
-private:
+		// init method must create the Tunnelman object and insert it into the oil field at the right
+		// starting location, Creates all of the oil field’s Earth objects and inserts them into a
+		// data structure that tracks active Earth
+		virtual int init();
+
+		// move method must, during each tick, ask your Tunnelman object to do something
+		virtual int move();
+
+		// cleanUp method must free any dynamically allocated data that was allocated during calls to the
+		// init() method or the move() method (will likely do the same thing as the destructor)
+		virtual void cleanUp();
+
 };
 
 #endif // STUDENTWORLD_H_
