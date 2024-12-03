@@ -2,22 +2,26 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
-#include "StudentWorld.h" // is this allowed?
+
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 // contains base, Earth, and Tunnelman class declarations
 // and necessary constants
 
+// forward declaration for StudentWorld ptr
+class StudentWorld;
+
 class Object : public GraphObject {
 	private:
-
+		StudentWorld* world;
 
 	public:
 		// constructor
-		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0)
+		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w)
 			: GraphObject(imageID, startX, startY, dir, size, depth)
 		{
 			setVisible(true);
+			world = w;
 		}
 		
 		// destructor
@@ -29,8 +33,7 @@ class Object : public GraphObject {
 		// returns pointer to StudentWorld
 		StudentWorld* getWorld()
 		{
-			StudentWorld* ptr;
-			return ptr;
+			return world;
 		}
 
 		// virtual method doSomething
