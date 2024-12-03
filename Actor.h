@@ -2,6 +2,7 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
+#include "StudentWorld.h" // is this allowed?
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 // contains base, Earth, and Tunnelman class declarations
@@ -23,6 +24,13 @@ class Object : public GraphObject {
 		~Object()
 		{
 
+		}
+
+		// returns pointer to StudentWorld
+		StudentWorld* getWorld()
+		{
+			StudentWorld* ptr;
+			return ptr;
 		}
 
 		// virtual method doSomething
@@ -49,19 +57,22 @@ class Earth : public Object {
 		{
 
 		}
+
 };
 
 
 class Tunnelman : public Object {
 	private:
-
+		int currX;
+		int currY;
 
 	public:
 		// constructor
 		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0)
 			: Object(TID_PLAYER, startX, startY, dir, size, depth)
 		{
-
+			currX = startX;
+			currY = startY;
 		}
 
 		// destructor
@@ -73,7 +84,50 @@ class Tunnelman : public Object {
 		// limited doSomething method
 		void doSomething()
 		{
-			
+			int key;
+
+			if (getWorld()->getKey(key) == true) {
+
+				// if user hits a key
+
+				switch (key)
+				{
+					case KEY_PRESS_LEFT: // move player to the left
+					{
+						// update Tunnelman location to target square
+						currX--;
+						moveTo(currX, currY);
+						break;
+					}
+					
+					case KEY_PRESS_RIGHT: // move player to the right
+					{
+						currX++;
+						moveTo(currX, currY);
+						break;
+					}
+					
+					case KEY_PRESS_UP: // move player up
+					{
+						currY++;
+						moveTo(currX, currY);
+						break;
+					}
+					
+					case KEY_PRESS_DOWN: // move player down
+					{
+						currY--;
+						moveTo(currX, currY);
+						break;
+					}
+
+				}
+
+			}
+
+			// remove any Earth objects that overlap with Tunnelman's 4x4 image
+
+
 		}
 
 };
