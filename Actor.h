@@ -16,28 +16,16 @@ class Object : public GraphObject {
 
 	public:
 		// constructor
-		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w = nullptr)
-			: GraphObject(imageID, startX, startY, dir, size, depth)
-		{
-			setVisible(true);
-			world = w;
-		}
+		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w = nullptr);
 		
 		// destructor
-		~Object()
-		{
-
-		}
+		~Object();
 
 		// returns pointer to StudentWorld
-		StudentWorld* getWorld()
-		{
-			return world;
-		}
+		StudentWorld* getWorld();
 
 		// virtual method doSomething
 		virtual void doSomething() = 0;
-
 
 };
 
@@ -48,22 +36,12 @@ class Earth : public Object {
 	
 	public:
 		// constructor
-		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw = nullptr)
-			: Object(TID_EARTH, startX, startY, dir, size, depth, sw)
-		{
-			
-		}
+		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw = nullptr);
 
 		// destructor
-		~Earth()
-		{
+		~Earth();
 
-		}
-
-		void doSomething()
-		{
-
-		}
+		void doSomething();
 
 };
 
@@ -75,67 +53,13 @@ class Tunnelman : public Object {
 
 	public:
 		// constructor
-		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw = nullptr)
-			: Object(TID_PLAYER, startX, startY, dir, size, depth, sw)
-		{
-			currX = startX;
-			currY = startY;
-		}
+		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw = nullptr);
 
 		// destructor
-		~Tunnelman()
-		{
-
-		}
+		~Tunnelman();
 
 		// limited doSomething method
-		void doSomething()
-		{
-			int key;
-
-			if (getWorld()->getKey(key) == true) {
-
-				// if user hits a key
-
-				switch (key)
-				{
-					case KEY_PRESS_LEFT: // move player to the left
-					{
-						// update Tunnelman location to target square
-						currX--;
-						moveTo(currX, currY);
-						break;
-					}
-					
-					case KEY_PRESS_RIGHT: // move player to the right
-					{
-						currX++;
-						moveTo(currX, currY);
-						break;
-					}
-					
-					case KEY_PRESS_UP: // move player up
-					{
-						currY++;
-						moveTo(currX, currY);
-						break;
-					}
-					
-					case KEY_PRESS_DOWN: // move player down
-					{
-						currY--;
-						moveTo(currX, currY);
-						break;
-					}
-
-				}
-
-			}
-
-			// remove any Earth objects that overlap with Tunnelman's 4x4 image
-
-
-		}
+		void doSomething();
 
 };
 
