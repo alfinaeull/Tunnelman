@@ -51,7 +51,7 @@ int StudentWorld::init()
 	// clear vertical shaft down Earth field
 	for (int i = 30; i < 34; i++) {
 
-		for (int j = 0; j < 60; j++) {
+		for (int j = 4; j < 60; j++) {
 
 			earthField[i][j]->setVisible(false);
 		}
