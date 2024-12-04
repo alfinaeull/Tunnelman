@@ -25,7 +25,7 @@ Object::~Object()
 }
 
 // returns pointer to StudentWorld
-StudentWorld* Object::getWorld()
+StudentWorld* Object::getWorld() const
 {
 	return world;
 }
@@ -140,16 +140,22 @@ void Tunnelman::doSomething()
 	}
 
 	// remove any Earth objects that overlap with Tunnelman's 4x4 image
+	bool earthRemoved = false;
 	for (int i = currX; i < currX + 4; i++) {
 
 		for (int j = currY; j < currY + 4; j++) {
 
 			if (i >= 0 && i < 64 && j >= 0 && j < 60) {
-
-				getWorld()->digEarth(i, j);
+				if (earthRemoved)
+					getWorld()->digEarth(i, j);
+				else
+					earthRemoved = getWorld()->digEarth(i, j);
 			}
 
 		}
 	}
-
+	if (earthRemoved)
+	{
+		getWorld()->playSound(SOUND_DIG);
+	}
 }

@@ -22,7 +22,7 @@ class Object : public GraphObject {
 		~Object();
 
 		// returns pointer to StudentWorld
-		StudentWorld* getWorld();
+		StudentWorld* getWorld() const;
 
 		// virtual method doSomething
 		virtual void doSomething() = 0;

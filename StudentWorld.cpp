@@ -24,10 +24,15 @@ StudentWorld::~StudentWorld()
 	cleanUp();
 }
 
-void StudentWorld::digEarth(int i, int j)
+bool StudentWorld::digEarth(int i, int j)
 {
-	earthField[i][j]->setVisible(false);
-
+	if (clearedEarth[i][j] == false)
+	{
+		earthField[i][j]->setVisible(false);
+		clearedEarth[i][j] = true;
+		return true;
+	}
+	return false;
 }
 
 // init method must create the Tunnelman object and insert it into the oil field at the right
@@ -54,6 +59,7 @@ int StudentWorld::init()
 		for (int j = 4; j < 60; j++) {
 
 			earthField[i][j]->setVisible(false);
+			clearedEarth[i][j] = true;
 		}
 
 	}
