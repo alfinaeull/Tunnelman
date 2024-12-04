@@ -15,7 +15,7 @@ GameWorld* createStudentWorld(string assetDir)
 StudentWorld::StudentWorld(std::string assetDir)
 	: GameWorld(assetDir)
 {
-	
+
 }
 
 // destructor
@@ -40,12 +40,22 @@ int StudentWorld::init()
 
 	// create array of Earth field
 	for (int i = 0; i < 64; i++) {
-		
+
 		for (int j = 0; j < 60; j++) {
 
 			earthField[i][j] = new Earth(i, j, GraphObject::right, .25, 3, this);
 
 		}
+	}
+
+	// clear vertical shaft down Earth field
+	for (int i = 30; i < 34; i++) {
+
+		for (int j = 0; j < 60; j++) {
+
+			earthField[i][j]->setVisible(false);
+		}
+
 	}
 
 	return GWSTATUS_CONTINUE_GAME;
@@ -62,7 +72,7 @@ int StudentWorld::move()
 		decLives();
 		return GWSTATUS_PLAYER_DIED;
 	}
-	
+
 	tunnelman->doSomething();
 	return GWSTATUS_CONTINUE_GAME;
 }
@@ -85,4 +95,3 @@ void StudentWorld::cleanUp()
 	}
 
 }
-
