@@ -48,14 +48,17 @@ int StudentWorld::init()
 // move method must, during each tick, ask your Tunnelman object to do something
 int StudentWorld::move()
 {
+	bool tunnelman_alive = true;
+
+	if (tunnelman_alive == false) {
+		// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
+		// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
+		decLives();
+		return GWSTATUS_PLAYER_DIED;
+	}
+	
 	tunnelman->doSomething();
-
-
-
-	// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
-	// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
-	decLives();
-	return GWSTATUS_PLAYER_DIED;
+	return GWSTATUS_CONTINUE_GAME;
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the
