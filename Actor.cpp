@@ -23,12 +23,6 @@ StudentWorld* Object::getWorld()
 	return world;
 }
 
-// virtual method doSomething
-void Object::doSomething()
-{
-
-}
-
 // constructor
 Earth::Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw = nullptr)
 	: Object(TID_EARTH, startX, startY, dir, size, depth, sw)
@@ -110,7 +104,7 @@ void Tunnelman::doSomething()
 
 		for (int j = currY; j < currY + 4; j++) {
 
-			if (i > 0 && i < 64 && j > 0 && j < 60) {
+			if (i >= 0 && i < 64 && j >= 0 && j < 60) {
 
 				getWorld()->digEarth(i, j);
 			}

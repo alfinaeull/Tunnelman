@@ -15,7 +15,7 @@ GameWorld* createStudentWorld(string assetDir)
 StudentWorld::StudentWorld(std::string assetDir)
 	: GameWorld(assetDir)
 {
-	init();
+	
 }
 
 // destructor

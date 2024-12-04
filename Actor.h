@@ -25,7 +25,7 @@ class Object : public GraphObject {
 		StudentWorld* getWorld();
 
 		// virtual method doSomething
-		virtual void doSomething();
+		virtual void doSomething() = 0;
 
 };
 
