@@ -16,7 +16,7 @@ class Object : public GraphObject {
 
 	public:
 		// constructor
-		Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w = nullptr);
+		Object(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
 		
 		// destructor
 		~Object();
@@ -25,7 +25,7 @@ class Object : public GraphObject {
 		StudentWorld* getWorld();
 
 		// virtual method doSomething
-		virtual void doSomething() = 0;
+		virtual void doSomething();
 
 };
 
@@ -36,7 +36,7 @@ class Earth : public Object {
 	
 	public:
 		// constructor
-		Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw = nullptr);
+		Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
 
 		// destructor
 		~Earth();
@@ -53,7 +53,7 @@ class Tunnelman : public Object {
 
 	public:
 		// constructor
-		Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw = nullptr);
+		Tunnelman(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
 
 		// destructor
 		~Tunnelman();
@@ -62,9 +62,6 @@ class Tunnelman : public Object {
 		void doSomething();
 
 };
-
-
-
 
 
 
