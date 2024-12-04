@@ -66,6 +66,7 @@ Tunnelman::~Tunnelman()
 void Tunnelman::doSomething()
 {
 	int key;
+	GraphObject::Direction lastDirection = getDirection();
 
 	if (getWorld()->getKey(key) == true) {
 
@@ -76,7 +77,13 @@ void Tunnelman::doSomething()
 			// update Tunnelman location to target square as long as within oil field
 			case KEY_PRESS_LEFT: // move player to the left
 			{
+				setDirection(left);
+				if (lastDirection != left)
+				{
+					break;
+				}
 				// update Tunnelman location to target square as long as within oil field
+				setDirection(left);
 				if (currX != LEFT_EDGE)
 				{
 					currX--;
@@ -87,6 +94,11 @@ void Tunnelman::doSomething()
 
 			case KEY_PRESS_RIGHT: // move player to the right
 			{
+				setDirection(right);
+				if (lastDirection != right)
+				{
+					break;
+				}
 				if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
 				{
 					currX++;
@@ -97,6 +109,11 @@ void Tunnelman::doSomething()
 
 			case KEY_PRESS_UP: // move player up
 			{
+				setDirection(up);
+				if (lastDirection != up)
+				{
+					break;
+				}
 				if (currY != TOP_EDGE)
 				{
 					currY++;
@@ -107,6 +124,11 @@ void Tunnelman::doSomething()
 
 			case KEY_PRESS_DOWN: // move player down
 			{
+				setDirection(down);
+				if (lastDirection != down)
+				{
+					break;
+				}
 				if (currY != BOTTOM_EDGE)
 				{
 					currY--;
