@@ -94,6 +94,17 @@ void Tunnelman::doSomething()
 	}
 
 	// remove any Earth objects that overlap with Tunnelman's 4x4 image
+	for (int i = currX; i < currX + 4; i++) {
+
+				for (int j = currY; j < currY + 4; j++) {
+
+					if (i > 0 && i < 64 && j > 0 && j < 60) {
+
+						getWorld()->digEarth(i, j);
+					}
+
+				}
+			}
 
 
 }
