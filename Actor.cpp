@@ -30,6 +30,16 @@ StudentWorld* Object::getWorld() const
 	return world;
 }
 
+void Object::setState(bool state)
+{
+	alive = state;
+}
+
+bool Object::isAlive()
+{
+	return alive;
+}
+
 // constructor
 Earth::Earth(int startX, int startY, Direction dir = right, double size = .25, unsigned int depth = 3, StudentWorld* sw = nullptr)
 	: Object(TID_EARTH, startX, startY, dir, size, depth, sw)
@@ -158,4 +168,42 @@ void Tunnelman::doSomething()
 	{
 		getWorld()->playSound(SOUND_DIG);
 	}
+}
+
+Goodie::Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
+	: Object(imageID, startX, startY, dir, size, depth, w)
+{
+	
+}
+
+Goodie::~Goodie()
+{
+
+}
+
+Barrel::Barrel(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
+	: Goodie(TID_BARREL, startX, startY, dir, size, depth, w)
+{
+	setVisible(false);
+}
+
+Barrel::~Barrel()
+{
+
+}
+
+void Barrel::pickupItem()
+{
+	this->getWorld()->increaseScore(1000);
+	this->getWorld()->playSound(SOUND_FOUND_OIL);
+	setState(false);
+}
+
+void Barrel::doSomething()
+{
+	if (!isAlive())
+	{
+		return;
+	}
+	this->getWorld()->showObjectsNearPlayer();
 }

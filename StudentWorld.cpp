@@ -15,7 +15,7 @@ GameWorld* createStudentWorld(string assetDir)
 StudentWorld::StudentWorld(std::string assetDir)
 	: GameWorld(assetDir)
 {
-
+	
 }
 
 // destructor
@@ -40,6 +40,19 @@ bool StudentWorld::digEarth(int i, int j)
 // data structure that tracks active Earth
 int StudentWorld::init()
 {
+	srand(time(0));
+
+	int L = min(static_cast<int>(2 + getLevel()), 21);
+	barrelCount = L;
+
+	// TODO: make sure barrels can't spawn too close to one another
+	for (int i = 0; i < L; i++)
+	{
+		int randx = int(rand() % 61);
+		int randy = int(rand() % 57);
+		actors.push_back(new Barrel(randx, randy, GraphObject::right, 1.0, 2, this));
+	}
+
 	// initialize tunnelman
 	tunnelman = new Tunnelman(30, 60, GraphObject::right, 1.0, 0, this);
 
@@ -67,6 +80,16 @@ int StudentWorld::init()
 	return GWSTATUS_CONTINUE_GAME;
 }
 
+void StudentWorld::setDisplayText()
+{
+	int level = getLevel();
+	int barrelsLeft = barrelCount;
+	int score = getScore();
+
+	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score);
+	setGameStatText(s);
+}
+
 // move method must, during each tick, ask your Tunnelman object to do something
 int StudentWorld::move()
 {
@@ -79,8 +102,81 @@ int StudentWorld::move()
 		return GWSTATUS_PLAYER_DIED;
 	}
 
+	setDisplayText();
+
 	tunnelman->doSomething();
+	for (auto actor : actors)
+	{
+		if (actor->isAlive())
+		{
+			actor->doSomething();
+		}
+	}
+
+	removeDeadGameObjects();
+
+	if (barrelCount == 0)
+	{
+		playSound(SOUND_FINISHED_LEVEL);
+		return GWSTATUS_FINISHED_LEVEL;
+	}
+
 	return GWSTATUS_CONTINUE_GAME;
+}
+
+float StudentWorld::measureDistance(int x1, int y1, int x2, int y2)
+{
+	float xdist = static_cast<float>(abs(x2 - x1));
+	float ydist = static_cast<float>(abs(y2 - y1));
+	float totaldist = sqrt((xdist * xdist) + (ydist * ydist));
+	return totaldist;
+}
+
+void StudentWorld::removeDeadGameObjects()
+{
+	if (actors.empty())
+	{
+		return;
+	}
+	auto it = actors.begin();
+	while (it != actors.end())
+	{
+		if ((*it)->isAlive() == false)
+		{
+			auto temp = *it;
+			it = actors.erase(it);
+			delete (temp);
+			continue;
+		}
+		it++;
+	}
+}
+
+// TODO: refactor this so that the proximity checking can be used for gold and barrels on radar scan
+//       this potentially also applies to checking to make sure objects don't spawn to close to one another.
+void StudentWorld::showObjectsNearPlayer()
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+
+	for (Object* actor : actors)
+	{
+		if (dynamic_cast<Barrel*>(actor) != nullptr && actor->isAlive())
+		{
+			int bx = actor->getX();
+			int by = actor->getY();
+			float dist = measureDistance(tx, ty, bx, by);
+			if (dist <= 3.0)
+			{
+				dynamic_cast<Barrel*>(actor)->pickupItem();
+				barrelCount--;
+			}
+			else if (dist <= 4.0)
+			{
+				actor->setVisible(true);
+			}
+		}
+	}
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the
@@ -96,8 +192,14 @@ void StudentWorld::cleanUp()
 		for (int j = 0; j < 60; j++) {
 
 			delete earthField[i][j];
-
+			clearedEarth[i][j] = false;
 		}
 	}
 
+	// clear actors
+	for (auto it = actors.begin(); it != actors.end(); ++it)
+	{
+		delete* it;  // Delete the object pointed to by the iterator
+	}
+	actors.clear();
 }

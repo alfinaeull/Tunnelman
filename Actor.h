@@ -13,7 +13,9 @@
 class Object : public GraphObject {
 	private:
 		StudentWorld* world;
-
+		bool alive = true;
+	protected:
+		void setState(bool state);
 	public:
 		// constructor
 		Object(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
@@ -27,6 +29,7 @@ class Object : public GraphObject {
 		// virtual method doSomething
 		virtual void doSomething() = 0;
 
+		bool isAlive();
 };
 
 
@@ -63,6 +66,37 @@ class Tunnelman : public Object {
 
 };
 
+// Base class for pickups; gold, barrel, water, sonar
+class Goodie : public Object
+{
+private:
+	int x;
+	int y;
+public:
+	// constructor
+	Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	// destructor
+	~Goodie();
+
+	virtual void pickupItem() = 0;
+};
+
+class Barrel : public Goodie
+{
+private:
+
+public:
+	// constructor
+	Barrel(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	//destructor 
+	~Barrel();
+
+	void pickupItem();
+
+	void doSomething();
+};
 
 
 #endif // ACTOR_H_

@@ -4,6 +4,7 @@
 #include "GameWorld.h"
 #include "GameConstants.h"
 #include <string>
+#include <vector>
 
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 // contains your StudentWorld class declaration
@@ -12,7 +13,7 @@
 // forward declaration for Earth and Tunnelman
 class Tunnelman;
 class Earth;
-
+class Object;
 
 class StudentWorld : public GameWorld
 {
@@ -20,6 +21,12 @@ class StudentWorld : public GameWorld
 		Tunnelman* tunnelman;
 		Earth* earthField[64][60];
 		bool clearedEarth[64][60] = { false };
+		std::vector<Object*> actors;
+		int barrelCount;
+
+		float measureDistance(int x1, int y1, int x2, int y2);
+		void removeDeadGameObjects();
+		void setDisplayText();
 
 	public:
 		// constructor
@@ -38,10 +45,11 @@ class StudentWorld : public GameWorld
 		// move method must, during each tick, ask your Tunnelman object to do something
 		virtual int move();
 
+		void showObjectsNearPlayer();
+
 		// cleanUp method must free any dynamically allocated data that was allocated during calls to the
 		// init() method or the move() method (will likely do the same thing as the destructor)
 		virtual void cleanUp();
-
 };
 
 #endif // STUDENTWORLD_H_
