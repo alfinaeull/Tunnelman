@@ -71,6 +71,8 @@ public:
 	int getGoldCount();
 
 	void incrementGoldCount();
+
+	void dropGold();
 };
 
 // Base class for pickups; gold, barrel, water, sonar
@@ -113,7 +115,7 @@ private:
 	bool createdByPlayer;
 public:
 	// constructor
-	Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+	Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w, bool createdByPlayer);
 
 	// destructor
 	~Gold();

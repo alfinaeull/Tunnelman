@@ -146,6 +146,11 @@ void Tunnelman::doSomething()
 				}
 				break;
 			}
+
+			case KEY_PRESS_TAB:
+			{
+				dropGold();
+			}
 		}
 	}
 
@@ -173,6 +178,15 @@ void Tunnelman::doSomething()
 int Tunnelman::getGoldCount()
 {
 	return goldCount;
+}
+
+void Tunnelman::dropGold()
+{
+	if (goldCount > 0)
+	{
+		goldCount--;
+		getWorld()->spawnGold(this);
+	}
 }
 
 void Tunnelman::incrementGoldCount()
@@ -219,9 +233,10 @@ void Barrel::doSomething()
 	this->getWorld()->showObjectsNearPlayer();
 }
 
-Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
+Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr, bool createdByPlayer = false)
 	: Goodie(TID_GOLD, startX, startY, dir, size, depth, w)
 {
+	this->createdByPlayer = createdByPlayer;
 	if (createdByPlayer != true)
 	{
 		setVisible(false);
@@ -233,7 +248,7 @@ Gold::~Gold()
 
 }
 
-bool Gold::canBeRevealed() override
+bool Gold::canBeRevealed()
 {
 	if (createdByPlayer == true)
 	{

@@ -57,7 +57,7 @@ int StudentWorld::init()
 	{
 		int randx = int(rand() % 61);
 		int randy = int(rand() % 57);
-		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this));
+		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this, false));
 	}
 
 	// initialize tunnelman
@@ -188,6 +188,11 @@ void StudentWorld::showObjectsNearPlayer()
 			}
 		}
 	}
+}
+
+void StudentWorld::spawnGold(Tunnelman* tunnelman)
+{
+	actors.push_back(new Gold(tunnelman->getX(), tunnelman->getY(), GraphObject::right, 1.0, 2, this, true));
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the
