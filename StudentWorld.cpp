@@ -15,7 +15,7 @@ GameWorld* createStudentWorld(string assetDir)
 StudentWorld::StudentWorld(std::string assetDir)
 	: GameWorld(assetDir)
 {
-	
+
 }
 
 // destructor
@@ -82,7 +82,7 @@ int StudentWorld::init()
 
 void StudentWorld::setDisplayText()
 {
-	int level = getLevel();
+	int level = getLevel() + 1;
 	int barrelsLeft = barrelCount;
 	int score = getScore();
 
