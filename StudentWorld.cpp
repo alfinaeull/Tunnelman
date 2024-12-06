@@ -82,7 +82,7 @@ int StudentWorld::init()
 
 void StudentWorld::setDisplayText()
 {
-	int level = getLevel() + 1;
+	int level = getLevel();
 	int barrelsLeft = barrelCount;
 	int score = getScore();
 
