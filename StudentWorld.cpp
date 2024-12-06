@@ -42,6 +42,7 @@ int StudentWorld::init()
 {
 	srand(time(0));
 
+	int G = max(static_cast<int>(5 - getLevel() / 2), 2);
 	int L = min(static_cast<int>(2 + getLevel()), 21);
 	barrelCount = L;
 
@@ -161,15 +162,16 @@ void StudentWorld::showObjectsNearPlayer()
 
 	for (Object* actor : actors)
 	{
-		if (dynamic_cast<Barrel*>(actor) != nullptr && actor->isAlive())
+		if (actor->canBeRevealed() && actor->isAlive())
 		{
 			int bx = actor->getX();
 			int by = actor->getY();
 			float dist = measureDistance(tx, ty, bx, by);
 			if (dist <= 3.0)
 			{
-				dynamic_cast<Barrel*>(actor)->pickupItem();
-				barrelCount--;
+				int itemId = dynamic_cast<Goodie*>(actor)->pickupItem();
+				if (itemId == TID_BARREL)
+					barrelCount--;
 			}
 			else if (dist <= 4.0)
 			{

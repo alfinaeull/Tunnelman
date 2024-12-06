@@ -23,6 +23,9 @@ class Object : public GraphObject {
 		// destructor
 		~Object();
 
+		// used to identify classes gold and barrel which are not initially visible to player
+		virtual bool canBeRevealed() { return false; }
+
 		// returns pointer to StudentWorld
 		StudentWorld* getWorld() const;
 
@@ -79,7 +82,9 @@ public:
 	// destructor
 	~Goodie();
 
-	virtual void pickupItem() = 0;
+	bool canBeRevealed() override { return true; }
+
+	virtual int pickupItem() = 0;
 };
 
 class Barrel : public Goodie
@@ -93,10 +98,27 @@ public:
 	//destructor 
 	~Barrel();
 
-	void pickupItem();
+	int pickupItem();
 
 	void doSomething();
 };
 
+class Gold : public Goodie
+{
+private:
+
+public:
+	// constructor
+	Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	// destructor
+	~Gold();
+
+	bool canBeRevealed() override { return true; }
+
+	int pickupItem();
+
+	void doSomething();
+};
 
 #endif // ACTOR_H_

@@ -192,11 +192,12 @@ Barrel::~Barrel()
 
 }
 
-void Barrel::pickupItem()
+int Barrel::pickupItem()
 {
 	this->getWorld()->increaseScore(1000);
 	this->getWorld()->playSound(SOUND_FOUND_OIL);
 	setState(false);
+	return TID_BARREL;
 }
 
 void Barrel::doSomething()
