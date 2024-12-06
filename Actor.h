@@ -11,60 +11,83 @@
 
 
 class Object : public GraphObject {
-	private:
-		StudentWorld* world;
-		bool alive = true;
-	protected:
-		void setState(bool state);
-	public:
-		// constructor
-		Object(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
-		
-		// destructor
-		~Object();
+private:
+	StudentWorld* world;
+	bool alive = true;
+protected:
+	void setState(bool state);
+public:
+	// constructor
+	Object(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
 
-		// returns pointer to StudentWorld
-		StudentWorld* getWorld() const;
+	// destructor
+	~Object();
 
-		// virtual method doSomething
-		virtual void doSomething() = 0;
+	// returns pointer to StudentWorld
+	StudentWorld* getWorld() const;
 
-		bool isAlive();
+	// virtual method doSomething
+	virtual void doSomething() = 0;
+
+	bool isAlive();
 };
 
 
 class Earth : public Object {
-	private:
-		
+private:
 	
-	public:
-		// constructor
-		Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
 
-		// destructor
-		~Earth();
+public:
+	// constructor
+	Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
 
-		void doSomething();
+	// destructor
+	~Earth();
+
+	void doSomething();
 
 };
 
 
 class Tunnelman : public Object {
-	private:
-		int currX;
-		int currY;
+private:
+	int currX;
+	int currY;
 
-	public:
-		// constructor
-		Tunnelman(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+public:
+	// constructor
+	Tunnelman(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
 
-		// destructor
-		~Tunnelman();
+	// destructor
+	~Tunnelman();
 
-		// limited doSomething method
-		void doSomething();
+	// doSomething method
+	void doSomething();
 
 };
+
+
+class Boulder : public Object {
+private:
+	std::string state;
+
+public: 
+
+	// constructor
+	Boulder(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+
+	// destructor
+	~Boulder();
+
+	// doSomething method
+	void doSomething();
+
+	std::string getState();
+
+
+};
+
+
 
 // Base class for pickups; gold, barrel, water, sonar
 class Goodie : public Object
