@@ -92,8 +92,9 @@ void StudentWorld::setDisplayText()
 	int level = getLevel();
 	int barrelsLeft = barrelCount;
 	int score = getScore();
+	int gold = tunnelman->getGoldCount();
 
-	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score);
+	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " + to_string(gold);
 	setGameStatText(s);
 }
 
@@ -178,6 +179,8 @@ void StudentWorld::showObjectsNearPlayer()
 				int itemId = dynamic_cast<Goodie*>(actor)->pickupItem();
 				if (itemId == TID_BARREL)
 					barrelCount--;
+				if (itemId == TID_GOLD)
+					tunnelman->incrementGoldCount();
 			}
 			else if (dist <= 4.0)
 			{

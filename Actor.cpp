@@ -170,6 +170,16 @@ void Tunnelman::doSomething()
 	}
 }
 
+int Tunnelman::getGoldCount()
+{
+	return goldCount;
+}
+
+void Tunnelman::incrementGoldCount()
+{
+	goldCount++;
+}
+
 Goodie::Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
 	: Object(imageID, startX, startY, dir, size, depth, w)
 {
@@ -221,6 +231,15 @@ Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int dept
 Gold::~Gold()
 {
 
+}
+
+bool Gold::canBeRevealed() override
+{
+	if (createdByPlayer == true)
+	{
+		return false;
+	}
+	return true;
 }
 
 int Gold::pickupItem()

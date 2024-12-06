@@ -56,6 +56,7 @@ class Tunnelman : public Object {
 private:
 	int currX;
 	int currY;
+	int goldCount;
 
 public:
 	// constructor
@@ -67,6 +68,9 @@ public:
 	// limited doSomething method
 	void doSomething();
 
+	int getGoldCount();
+
+	void incrementGoldCount();
 };
 
 // Base class for pickups; gold, barrel, water, sonar
@@ -114,7 +118,7 @@ public:
 	// destructor
 	~Gold();
 
-	bool canBeRevealed() override { return true; }
+	bool canBeRevealed() override;
 
 	int pickupItem();
 
