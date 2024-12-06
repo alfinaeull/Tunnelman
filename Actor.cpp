@@ -208,3 +208,34 @@ void Barrel::doSomething()
 	}
 	this->getWorld()->showObjectsNearPlayer();
 }
+
+Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
+	: Goodie(TID_GOLD, startX, startY, dir, size, depth, w)
+{
+	if (createdByPlayer != true)
+	{
+		setVisible(false);
+	}
+}
+
+Gold::~Gold()
+{
+
+}
+
+int Gold::pickupItem()
+{
+	this->getWorld()->increaseScore(10);
+	this->getWorld()->playSound(SOUND_GOT_GOODIE);
+	setState(false);
+	return TID_GOLD;
+}
+
+void Gold::doSomething()
+{
+	if (!isAlive())
+	{
+		return;
+	}
+	this->getWorld()->showObjectsNearPlayer();
+}

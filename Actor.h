@@ -11,61 +11,61 @@
 
 
 class Object : public GraphObject {
-	private:
-		StudentWorld* world;
-		bool alive = true;
-	protected:
-		void setState(bool state);
-	public:
-		// constructor
-		Object(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
-		
-		// destructor
-		~Object();
+private:
+	StudentWorld* world;
+	bool alive = true;
+protected:
+	void setState(bool state);
+public:
+	// constructor
+	Object(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
 
-		// used to identify classes gold and barrel which are not initially visible to player
-		virtual bool canBeRevealed() { return false; }
+	// destructor
+	~Object();
 
-		// returns pointer to StudentWorld
-		StudentWorld* getWorld() const;
+	// used to identify classes gold and barrel which are not initially visible to player
+	virtual bool canBeRevealed() { return false; }
 
-		// virtual method doSomething
-		virtual void doSomething() = 0;
+	// returns pointer to StudentWorld
+	StudentWorld* getWorld() const;
 
-		bool isAlive();
+	// virtual method doSomething
+	virtual void doSomething() = 0;
+
+	bool isAlive();
 };
 
 
 class Earth : public Object {
-	private:
-		
-	
-	public:
-		// constructor
-		Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+private:
 
-		// destructor
-		~Earth();
 
-		void doSomething();
+public:
+	// constructor
+	Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+
+	// destructor
+	~Earth();
+
+	void doSomething();
 
 };
 
 
 class Tunnelman : public Object {
-	private:
-		int currX;
-		int currY;
+private:
+	int currX;
+	int currY;
 
-	public:
-		// constructor
-		Tunnelman(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+public:
+	// constructor
+	Tunnelman(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
 
-		// destructor
-		~Tunnelman();
+	// destructor
+	~Tunnelman();
 
-		// limited doSomething method
-		void doSomething();
+	// limited doSomething method
+	void doSomething();
 
 };
 
@@ -106,7 +106,7 @@ public:
 class Gold : public Goodie
 {
 private:
-
+	bool createdByPlayer;
 public:
 	// constructor
 	Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);

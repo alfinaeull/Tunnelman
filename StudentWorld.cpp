@@ -46,12 +46,18 @@ int StudentWorld::init()
 	int L = min(static_cast<int>(2 + getLevel()), 21);
 	barrelCount = L;
 
-	// TODO: make sure barrels can't spawn too close to one another
+	// TODO: make sure goodies can't spawn too close to one another
 	for (int i = 0; i < L; i++)
 	{
 		int randx = int(rand() % 61);
 		int randy = int(rand() % 57);
 		actors.push_back(new Barrel(randx, randy, GraphObject::right, 1.0, 2, this));
+	}
+	for (int i = 0; i < G; i++)
+	{
+		int randx = int(rand() % 61);
+		int randy = int(rand() % 57);
+		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this));
 	}
 
 	// initialize tunnelman
