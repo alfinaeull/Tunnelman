@@ -10,6 +10,7 @@ const int TOP_EDGE = 60;
 const int BOTTOM_EDGE = 0;
 
 const int TUNNELMAN_SIZE = 4;
+const int GOLD_DESPAWN_TIMER = 100;
 
 Object::Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w = nullptr)
 	: GraphObject(imageID, startX, startY, dir, size, depth)
@@ -292,6 +293,14 @@ int Gold::pickupItem()
 
 void Gold::doSomething()
 {
+	if (createdByPlayer == true)
+	{
+		timer++;
+	}
+	if (timer >= GOLD_DESPAWN_TIMER)
+	{
+		setState(false);
+	}
 	if (!isAlive())
 	{
 		return;

@@ -134,6 +134,7 @@ public:
 class Gold : public Goodie
 {
 private:
+	int timer = 0;
 	bool createdByPlayer;
 public:
 	// constructor
