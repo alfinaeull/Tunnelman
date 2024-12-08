@@ -35,6 +35,30 @@ bool StudentWorld::digEarth(int i, int j)
 	return false;
 }
 
+void StudentWorld::validatePosition(int& x, int& y)
+{
+	while (true)
+	{
+		x = int(rand() % 61);
+		y = int(rand() % 57);
+		bool validated = true;
+
+		for (Object* actor : actors)
+		{
+			float dist = measureDistance(x, y, actor->getX(), actor->getY());
+			if (dist <= 6.0)
+			{
+				validated = false;
+				break;
+			}
+		}
+		if (validated)
+		{
+			return;
+		}
+	}
+}
+
 // init method must create the Tunnelman object and insert it into the oil field at the right
 // starting location, Creates all of the oil field’s Earth objects and inserts them into a
 // data structure that tracks active Earth
@@ -49,14 +73,18 @@ int StudentWorld::init()
 	// TODO: make sure goodies can't spawn too close to one another
 	for (int i = 0; i < L; i++)
 	{
-		int randx = int(rand() % 61);
-		int randy = int(rand() % 57);
+		int randx; 
+		int randy; 
+		validatePosition(randx, randy);
+
 		actors.push_back(new Barrel(randx, randy, GraphObject::right, 1.0, 2, this));
 	}
 	for (int i = 0; i < G; i++)
 	{
-		int randx = int(rand() % 61);
-		int randy = int(rand() % 57);
+		int randx;
+		int randy;
+		validatePosition(randx, randy);
+
 		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this, false));
 	}
 

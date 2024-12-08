@@ -27,6 +27,7 @@ class StudentWorld : public GameWorld
 		float measureDistance(int x1, int y1, int x2, int y2);
 		void removeDeadGameObjects();
 		void setDisplayText();
+		void validatePosition(int& x, int& y);
 
 	public:
 		// constructor
