@@ -65,15 +65,9 @@ public:
 	// destructor
 	~Tunnelman();
 
-	// limited doSomething method
-	void doSomething();
-
 	int getGoldCount();
 
 	void incrementGoldCount();
-
-	// destructor
-	~Tunnelman();
 
 	// doSomething method
 	void doSomething();
@@ -98,7 +92,6 @@ public:
 	void doSomething();
 
 	std::string getState();
-
 
 };
 

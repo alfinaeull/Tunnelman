@@ -110,71 +110,72 @@ void Tunnelman::doSomething()
 		switch (key)
 		{
 			// update Tunnelman location to target square as long as within oil field
-		case KEY_PRESS_LEFT: // move player to the left
-		{
-			setDirection(left);
-			if (lastDirection != left)
+			case KEY_PRESS_LEFT: // move player to the left
 			{
+				setDirection(left);
+				if (lastDirection != left)
+				{
+					break;
+				}
+				// update Tunnelman location to target square as long as within oil field
+				setDirection(left);
+				if (currX != LEFT_EDGE)
+				{
+					currX--;
+					moveTo(currX, currY);
+				}
 				break;
 			}
-			// update Tunnelman location to target square as long as within oil field
-			setDirection(left);
-			if (currX != LEFT_EDGE)
-			{
-				currX--;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 
-		case KEY_PRESS_RIGHT: // move player to the right
-		{
-			setDirection(right);
-			if (lastDirection != right)
+			case KEY_PRESS_RIGHT: // move player to the right
 			{
+				setDirection(right);
+				if (lastDirection != right)
+				{
+					break;
+				}
+				if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
+				{
+					currX++;
+					moveTo(currX, currY);
+				}
 				break;
 			}
-			if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
-			{
-				currX++;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 
-		case KEY_PRESS_UP: // move player up
-		{
-			setDirection(up);
-			if (lastDirection != up)
+			case KEY_PRESS_UP: // move player up
 			{
+				setDirection(up);
+				if (lastDirection != up)
+				{
+					break;
+				}
+				if (currY != TOP_EDGE)
+				{
+					currY++;
+					moveTo(currX, currY);
+				}
 				break;
 			}
-			if (currY != TOP_EDGE)
-			{
-				currY++;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 
-		case KEY_PRESS_DOWN: // move player down
-		{
-			setDirection(down);
-			if (lastDirection != down)
+			case KEY_PRESS_DOWN: // move player down
 			{
+				setDirection(down);
+				if (lastDirection != down)
+				{
+					break;
+				}
+				if (currY != BOTTOM_EDGE)
+				{
+					currY--;
+					moveTo(currX, currY);
+				}
 				break;
 			}
 			case KEY_PRESS_TAB:
 			{
 				dropGold();
+				break;
 			}
-			if (currY != BOTTOM_EDGE)
-			{
-				currY--;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 		}
 	}
 
