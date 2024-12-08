@@ -242,6 +242,22 @@ void Tunnelman::useSonar()
 	sonarCount--;
 }
 
+Squirt::Squirt(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw = nullptr)
+	: Object(TID_WATER_SPURT, startX, startY, dir, size, depth, sw)
+{
+
+}
+
+Squirt::~Squirt()
+{
+
+}
+
+void Squirt::doSomething()
+{
+
+}
+
 Goodie::Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
 	: Object(imageID, startX, startY, dir, size, depth, w)
 {

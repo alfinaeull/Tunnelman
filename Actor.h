@@ -82,6 +82,18 @@ public:
 	void useSonar();
 };
 
+class Squirt : public Object {
+private:
+	int travelDistance = 4;
+public:
+	// constructor
+	Squirt(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+
+	// destructor
+	~Squirt();
+
+	void doSomething();
+};
 
 class Boulder : public Object {
 private:
