@@ -65,15 +65,9 @@ public:
 	// destructor
 	~Tunnelman();
 
-	// limited doSomething method
-	void doSomething();
-
 	int getGoldCount();
 
 	void incrementGoldCount();
-
-	// destructor
-	~Tunnelman();
 
 	// doSomething method
 	void doSomething();
@@ -98,7 +92,6 @@ public:
 	void doSomething();
 
 	std::string getState();
-
 
 };
 
@@ -141,6 +134,7 @@ public:
 class Gold : public Goodie
 {
 private:
+	int timer = 0;
 	bool createdByPlayer;
 public:
 	// constructor
@@ -153,6 +147,22 @@ public:
 
 	int pickupItem();
 
+	void doSomething();
+};
+
+class Sonar : public Goodie
+{
+private:
+	int timer = 0;
+public:
+	// constructor
+	Sonar(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	// destructor
+	~Sonar();
+
+	int pickupItem();
+	
 	void doSomething();
 };
 

@@ -35,6 +35,30 @@ bool StudentWorld::digEarth(int i, int j)
 	return false;
 }
 
+void StudentWorld::validatePosition(int& x, int& y)
+{
+	while (true)
+	{
+		x = int(rand() % 61);
+		y = int(rand() % 57);
+		bool validated = true;
+
+		for (Object* actor : actors)
+		{
+			float dist = measureDistance(x, y, actor->getX(), actor->getY());
+			if (dist <= 6.0)
+			{
+				validated = false;
+				break;
+			}
+		}
+		if (validated)
+		{
+			return;
+		}
+	}
+}
+
 // init method must create the Tunnelman object and insert it into the oil field at the right
 // starting location, Creates all of the oil field’s Earth objects and inserts them into a
 // data structure that tracks active Earth
@@ -46,17 +70,20 @@ int StudentWorld::init()
 	int L = min(static_cast<int>(2 + getLevel()), 21);
 	barrelCount = L;
 
-	// TODO: make sure goodies can't spawn too close to one another
 	for (int i = 0; i < L; i++)
 	{
-		int randx = int(rand() % 61);
-		int randy = int(rand() % 57);
+		int randx; 
+		int randy; 
+		validatePosition(randx, randy);
+
 		actors.push_back(new Barrel(randx, randy, GraphObject::right, 1.0, 2, this));
 	}
 	for (int i = 0; i < G; i++)
 	{
-		int randx = int(rand() % 61);
-		int randy = int(rand() % 57);
+		int randx;
+		int randy;
+		validatePosition(randx, randy);
+
 		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this, false));
 	}
 
@@ -108,6 +135,12 @@ int StudentWorld::move()
 		// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 		decLives();
 		return GWSTATUS_PLAYER_DIED;
+	}
+
+	int G = getLevel() * 25 + 300; // Chance of spawning sonar kit or water pool
+	if (rand() % G == 1)
+	{
+		// spawn sonar kit
 	}
 
 	setDisplayText();
@@ -162,7 +195,27 @@ void StudentWorld::removeDeadGameObjects()
 
 // TODO: refactor this so that the proximity checking can be used for gold and barrels on radar scan
 //       this potentially also applies to checking to make sure objects don't spawn to close to one another.
-void StudentWorld::showObjectsNearPlayer()
+void StudentWorld::showObjectsNearPlayer(int dist)
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+
+	for (Object* actor : actors)
+	{
+		if (actor->canBeRevealed() && actor->isAlive())
+		{
+			int bx = actor->getX();
+			int by = actor->getY();
+			float dist = measureDistance(tx, ty, bx, by);
+			if (dist <= 4.0)
+			{
+				actor->setVisible(true);
+			}
+		}
+	}
+}
+
+void StudentWorld::pickupObjectsNearPlayer()
 {
 	int tx = tunnelman->getX();
 	int ty = tunnelman->getY();
@@ -181,10 +234,6 @@ void StudentWorld::showObjectsNearPlayer()
 					barrelCount--;
 				if (itemId == TID_GOLD)
 					tunnelman->incrementGoldCount();
-			}
-			else if (dist <= 4.0)
-			{
-				actor->setVisible(true);
 			}
 		}
 	}

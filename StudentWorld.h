@@ -27,6 +27,7 @@ class StudentWorld : public GameWorld
 		float measureDistance(int x1, int y1, int x2, int y2);
 		void removeDeadGameObjects();
 		void setDisplayText();
+		void validatePosition(int& x, int& y);
 
 	public:
 		// constructor
@@ -45,7 +46,9 @@ class StudentWorld : public GameWorld
 		// move method must, during each tick, ask your Tunnelman object to do something
 		virtual int move();
 
-		void showObjectsNearPlayer();
+		void showObjectsNearPlayer(int dist);
+
+		void pickupObjectsNearPlayer();
 
 		void spawnGold(Tunnelman* tunnelman);
 

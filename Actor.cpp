@@ -10,6 +10,7 @@ const int TOP_EDGE = 60;
 const int BOTTOM_EDGE = 0;
 
 const int TUNNELMAN_SIZE = 4;
+const int GOLD_DESPAWN_TIMER = 100;
 
 Object::Object(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* w = nullptr)
 	: GraphObject(imageID, startX, startY, dir, size, depth)
@@ -110,71 +111,72 @@ void Tunnelman::doSomething()
 		switch (key)
 		{
 			// update Tunnelman location to target square as long as within oil field
-		case KEY_PRESS_LEFT: // move player to the left
-		{
-			setDirection(left);
-			if (lastDirection != left)
+			case KEY_PRESS_LEFT: // move player to the left
 			{
+				setDirection(left);
+				if (lastDirection != left)
+				{
+					break;
+				}
+				// update Tunnelman location to target square as long as within oil field
+				setDirection(left);
+				if (currX != LEFT_EDGE)
+				{
+					currX--;
+					moveTo(currX, currY);
+				}
 				break;
 			}
-			// update Tunnelman location to target square as long as within oil field
-			setDirection(left);
-			if (currX != LEFT_EDGE)
-			{
-				currX--;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 
-		case KEY_PRESS_RIGHT: // move player to the right
-		{
-			setDirection(right);
-			if (lastDirection != right)
+			case KEY_PRESS_RIGHT: // move player to the right
 			{
+				setDirection(right);
+				if (lastDirection != right)
+				{
+					break;
+				}
+				if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
+				{
+					currX++;
+					moveTo(currX, currY);
+				}
 				break;
 			}
-			if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
-			{
-				currX++;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 
-		case KEY_PRESS_UP: // move player up
-		{
-			setDirection(up);
-			if (lastDirection != up)
+			case KEY_PRESS_UP: // move player up
 			{
+				setDirection(up);
+				if (lastDirection != up)
+				{
+					break;
+				}
+				if (currY != TOP_EDGE)
+				{
+					currY++;
+					moveTo(currX, currY);
+				}
 				break;
 			}
-			if (currY != TOP_EDGE)
-			{
-				currY++;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 
-		case KEY_PRESS_DOWN: // move player down
-		{
-			setDirection(down);
-			if (lastDirection != down)
+			case KEY_PRESS_DOWN: // move player down
 			{
+				setDirection(down);
+				if (lastDirection != down)
+				{
+					break;
+				}
+				if (currY != BOTTOM_EDGE)
+				{
+					currY--;
+					moveTo(currX, currY);
+				}
 				break;
 			}
 			case KEY_PRESS_TAB:
 			{
 				dropGold();
+				break;
 			}
-			if (currY != BOTTOM_EDGE)
-			{
-				currY--;
-				moveTo(currX, currY);
-			}
-			break;
-		}
 		}
 	}
 
@@ -254,7 +256,8 @@ void Barrel::doSomething()
 	{
 		return;
 	}
-	this->getWorld()->showObjectsNearPlayer();
+	this->getWorld()->showObjectsNearPlayer(4);
+	this->getWorld()->pickupObjectsNearPlayer();
 }
 
 Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr, bool createdByPlayer = false)
@@ -291,9 +294,39 @@ int Gold::pickupItem()
 
 void Gold::doSomething()
 {
+	if (createdByPlayer == true)
+	{
+		timer++;
+	}
+	if (timer >= GOLD_DESPAWN_TIMER)
+	{
+		setState(false);
+	}
 	if (!isAlive())
 	{
 		return;
 	}
-	this->getWorld()->showObjectsNearPlayer();
+	this->getWorld()->showObjectsNearPlayer(4);
+	this->getWorld()->pickupObjectsNearPlayer();
+}
+
+Sonar::Sonar(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
+	: Goodie(TID_GOLD, startX, startY, dir, size, depth, w)
+{
+
+}
+
+Sonar::~Sonar()
+{
+
+}
+
+int Sonar::pickupItem()
+{
+	return 0;
+}
+
+void Sonar::doSomething()
+{
+
 }
