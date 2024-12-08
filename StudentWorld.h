@@ -46,7 +46,7 @@ class StudentWorld : public GameWorld
 		// move method must, during each tick, ask your Tunnelman object to do something
 		virtual int move();
 
-		void showObjectsNearPlayer(int dist);
+		void showObjectsNearPlayer(int revealed);
 
 		void pickupObjectsNearPlayer();
 

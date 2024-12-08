@@ -177,6 +177,12 @@ void Tunnelman::doSomething()
 				dropGold();
 				break;
 			}
+			case 'z':
+			case 'Z':
+			{
+				useSonar();
+				break;
+			}
 		}
 	}
 
@@ -218,6 +224,22 @@ void Tunnelman::dropGold()
 void Tunnelman::incrementGoldCount()
 {
 	goldCount++;
+}
+
+int Tunnelman::getSonarCount()
+{
+	return sonarCount;
+}
+
+void Tunnelman::incrementSonarCount()
+{
+	sonarCount++;
+}
+
+void Tunnelman::useSonar()
+{
+	this->getWorld()->showObjectsNearPlayer(12);
+	sonarCount--;
 }
 
 Goodie::Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
@@ -311,7 +333,7 @@ void Gold::doSomething()
 }
 
 Sonar::Sonar(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
-	: Goodie(TID_GOLD, startX, startY, dir, size, depth, w)
+	: Goodie(TID_SONAR, startX, startY, dir, size, depth, w)
 {
 
 }
@@ -323,10 +345,24 @@ Sonar::~Sonar()
 
 int Sonar::pickupItem()
 {
-	return 0;
+	this->getWorld()->increaseScore(75);
+	this->getWorld()->playSound(SOUND_GOT_GOODIE);
+	setState(false);
+	return TID_SONAR;
 }
 
 void Sonar::doSomething()
 {
-
+	timer++;
+	int sonarTime = std::max(100, int(300 - 10 * this->getWorld()->getLevel()));
+	if (timer >= sonarTime)
+	{
+		setState(false);
+	}
+	if (!isAlive())
+	{
+		return;
+	}
+	this->getWorld()->showObjectsNearPlayer(4);
+	this->getWorld()->pickupObjectsNearPlayer();
 }

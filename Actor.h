@@ -57,6 +57,7 @@ private:
 	int currX;
 	int currY;
 	int goldCount;
+	int sonarCount;
 
 public:
 	// constructor
@@ -69,10 +70,16 @@ public:
 
 	void incrementGoldCount();
 
+	int getSonarCount();
+
+	void incrementSonarCount();
+
 	// doSomething method
 	void doSomething();
 
 	void dropGold();
+	
+	void useSonar();
 };
 
 
