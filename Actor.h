@@ -43,7 +43,7 @@ private:
 public:
 	// constructor
 	Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
-
+  
 	// destructor
 	~Earth();
 
@@ -72,8 +72,37 @@ public:
 
 	void incrementGoldCount();
 
+	// destructor
+	~Tunnelman();
+
+	// doSomething method
+	void doSomething();
+
 	void dropGold();
 };
+
+
+class Boulder : public Object {
+private:
+	std::string state;
+
+public: 
+
+	// constructor
+	Boulder(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
+
+	// destructor
+	~Boulder();
+
+	// doSomething method
+	void doSomething();
+
+	std::string getState();
+
+
+};
+
+
 
 // Base class for pickups; gold, barrel, water, sonar
 class Goodie : public Object

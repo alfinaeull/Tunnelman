@@ -59,6 +59,31 @@ void Earth::doSomething()
 }
 
 // constructor
+Boulder::Boulder(int startX, int startY, Direction dir = down, double size = 1.0, unsigned int depth = 1, StudentWorld* sw = nullptr)
+	: Object(TID_BOULDER, startX, startY, dir, size, depth, sw)
+{
+	
+}
+
+// destructor
+Boulder::~Boulder()
+{
+
+}
+
+// doSomething method
+void Boulder::doSomething()
+{
+
+}
+
+std::string Boulder::getState()
+{
+	return state;
+}
+
+
+// constructor
 Tunnelman::Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw = nullptr)
 	: Object(TID_PLAYER, startX, startY, dir, size, depth, sw)
 {
@@ -85,72 +110,71 @@ void Tunnelman::doSomething()
 		switch (key)
 		{
 			// update Tunnelman location to target square as long as within oil field
-			case KEY_PRESS_LEFT: // move player to the left
+		case KEY_PRESS_LEFT: // move player to the left
+		{
+			setDirection(left);
+			if (lastDirection != left)
 			{
-				setDirection(left);
-				if (lastDirection != left)
-				{
-					break;
-				}
-				// update Tunnelman location to target square as long as within oil field
-				setDirection(left);
-				if (currX != LEFT_EDGE)
-				{
-					currX--;
-					moveTo(currX, currY);
-				}
 				break;
 			}
-
-			case KEY_PRESS_RIGHT: // move player to the right
+			// update Tunnelman location to target square as long as within oil field
+			setDirection(left);
+			if (currX != LEFT_EDGE)
 			{
-				setDirection(right);
-				if (lastDirection != right)
-				{
-					break;
-				}
-				if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
-				{
-					currX++;
-					moveTo(currX, currY);
-				}
+				currX--;
+				moveTo(currX, currY);
+			}
+			break;
+		}
+
+		case KEY_PRESS_RIGHT: // move player to the right
+		{
+			setDirection(right);
+			if (lastDirection != right)
+			{
 				break;
 			}
-
-			case KEY_PRESS_UP: // move player up
+			if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
 			{
-				setDirection(up);
-				if (lastDirection != up)
-				{
-					break;
-				}
-				if (currY != TOP_EDGE)
-				{
-					currY++;
-					moveTo(currX, currY);
-				}
+				currX++;
+				moveTo(currX, currY);
+			}
+			break;
+		}
+
+		case KEY_PRESS_UP: // move player up
+		{
+			setDirection(up);
+			if (lastDirection != up)
+			{
 				break;
 			}
-
-			case KEY_PRESS_DOWN: // move player down
+			if (currY != TOP_EDGE)
 			{
-				setDirection(down);
-				if (lastDirection != down)
-				{
-					break;
-				}
-				if (currY != BOTTOM_EDGE)
-				{
-					currY--;
-					moveTo(currX, currY);
-				}
+				currY++;
+				moveTo(currX, currY);
+			}
+			break;
+		}
+
+		case KEY_PRESS_DOWN: // move player down
+		{
+			setDirection(down);
+			if (lastDirection != down)
+			{
 				break;
 			}
-
 			case KEY_PRESS_TAB:
 			{
 				dropGold();
 			}
+			if (currY != BOTTOM_EDGE)
+			{
+				currY--;
+				moveTo(currX, currY);
+			}
+			break;
+		}
 		}
 	}
 
@@ -197,7 +221,7 @@ void Tunnelman::incrementGoldCount()
 Goodie::Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
 	: Object(imageID, startX, startY, dir, size, depth, w)
 {
-	
+
 }
 
 Goodie::~Goodie()
