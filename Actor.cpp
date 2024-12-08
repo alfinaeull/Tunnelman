@@ -256,7 +256,8 @@ void Barrel::doSomething()
 	{
 		return;
 	}
-	this->getWorld()->showObjectsNearPlayer();
+	this->getWorld()->showObjectsNearPlayer(4);
+	this->getWorld()->pickupObjectsNearPlayer();
 }
 
 Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr, bool createdByPlayer = false)
@@ -305,5 +306,27 @@ void Gold::doSomething()
 	{
 		return;
 	}
-	this->getWorld()->showObjectsNearPlayer();
+	this->getWorld()->showObjectsNearPlayer(4);
+	this->getWorld()->pickupObjectsNearPlayer();
+}
+
+Sonar::Sonar(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
+	: Goodie(TID_GOLD, startX, startY, dir, size, depth, w)
+{
+
+}
+
+Sonar::~Sonar()
+{
+
+}
+
+int Sonar::pickupItem()
+{
+	return 0;
+}
+
+void Sonar::doSomething()
+{
+
 }

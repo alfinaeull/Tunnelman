@@ -150,4 +150,20 @@ public:
 	void doSomething();
 };
 
+class Sonar : public Goodie
+{
+private:
+	int timer = 0;
+public:
+	// constructor
+	Sonar(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	// destructor
+	~Sonar();
+
+	int pickupItem();
+	
+	void doSomething();
+};
+
 #endif // ACTOR_H_

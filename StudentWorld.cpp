@@ -70,7 +70,6 @@ int StudentWorld::init()
 	int L = min(static_cast<int>(2 + getLevel()), 21);
 	barrelCount = L;
 
-	// TODO: make sure goodies can't spawn too close to one another
 	for (int i = 0; i < L; i++)
 	{
 		int randx; 
@@ -138,6 +137,12 @@ int StudentWorld::move()
 		return GWSTATUS_PLAYER_DIED;
 	}
 
+	int G = getLevel() * 25 + 300; // Chance of spawning sonar kit or water pool
+	if (rand() % G == 1)
+	{
+		// spawn sonar kit
+	}
+
 	setDisplayText();
 
 	tunnelman->doSomething();
@@ -190,7 +195,27 @@ void StudentWorld::removeDeadGameObjects()
 
 // TODO: refactor this so that the proximity checking can be used for gold and barrels on radar scan
 //       this potentially also applies to checking to make sure objects don't spawn to close to one another.
-void StudentWorld::showObjectsNearPlayer()
+void StudentWorld::showObjectsNearPlayer(int dist)
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+
+	for (Object* actor : actors)
+	{
+		if (actor->canBeRevealed() && actor->isAlive())
+		{
+			int bx = actor->getX();
+			int by = actor->getY();
+			float dist = measureDistance(tx, ty, bx, by);
+			if (dist <= 4.0)
+			{
+				actor->setVisible(true);
+			}
+		}
+	}
+}
+
+void StudentWorld::pickupObjectsNearPlayer()
 {
 	int tx = tunnelman->getX();
 	int ty = tunnelman->getY();
@@ -209,10 +234,6 @@ void StudentWorld::showObjectsNearPlayer()
 					barrelCount--;
 				if (itemId == TID_GOLD)
 					tunnelman->incrementGoldCount();
-			}
-			else if (dist <= 4.0)
-			{
-				actor->setVisible(true);
 			}
 		}
 	}
