@@ -164,6 +164,10 @@ void Tunnelman::doSomething()
 			{
 				break;
 			}
+			case KEY_PRESS_TAB:
+			{
+				dropGold();
+			}
 			if (currY != BOTTOM_EDGE)
 			{
 				currY--;
@@ -195,6 +199,25 @@ void Tunnelman::doSomething()
 	}
 }
 
+int Tunnelman::getGoldCount()
+{
+	return goldCount;
+}
+
+void Tunnelman::dropGold()
+{
+	if (goldCount > 0)
+	{
+		goldCount--;
+		getWorld()->spawnGold(this);
+	}
+}
+
+void Tunnelman::incrementGoldCount()
+{
+	goldCount++;
+}
+
 Goodie::Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr)
 	: Object(imageID, startX, startY, dir, size, depth, w)
 {
@@ -217,14 +240,56 @@ Barrel::~Barrel()
 
 }
 
-void Barrel::pickupItem()
+int Barrel::pickupItem()
 {
 	this->getWorld()->increaseScore(1000);
 	this->getWorld()->playSound(SOUND_FOUND_OIL);
 	setState(false);
+	return TID_BARREL;
 }
 
 void Barrel::doSomething()
+{
+	if (!isAlive())
+	{
+		return;
+	}
+	this->getWorld()->showObjectsNearPlayer();
+}
+
+Gold::Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w = nullptr, bool createdByPlayer = false)
+	: Goodie(TID_GOLD, startX, startY, dir, size, depth, w)
+{
+	this->createdByPlayer = createdByPlayer;
+	if (createdByPlayer != true)
+	{
+		setVisible(false);
+	}
+}
+
+Gold::~Gold()
+{
+
+}
+
+bool Gold::canBeRevealed()
+{
+	if (createdByPlayer == true)
+	{
+		return false;
+	}
+	return true;
+}
+
+int Gold::pickupItem()
+{
+	this->getWorld()->increaseScore(10);
+	this->getWorld()->playSound(SOUND_GOT_GOODIE);
+	setState(false);
+	return TID_GOLD;
+}
+
+void Gold::doSomething()
 {
 	if (!isAlive())
 	{

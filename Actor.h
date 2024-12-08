@@ -23,6 +23,9 @@ public:
 	// destructor
 	~Object();
 
+	// used to identify classes gold and barrel which are not initially visible to player
+	virtual bool canBeRevealed() { return false; }
+
 	// returns pointer to StudentWorld
 	StudentWorld* getWorld() const;
 
@@ -35,12 +38,12 @@ public:
 
 class Earth : public Object {
 private:
-	
+
 
 public:
 	// constructor
 	Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
-
+  
 	// destructor
 	~Earth();
 
@@ -53,6 +56,7 @@ class Tunnelman : public Object {
 private:
 	int currX;
 	int currY;
+	int goldCount;
 
 public:
 	// constructor
@@ -61,9 +65,20 @@ public:
 	// destructor
 	~Tunnelman();
 
+	// limited doSomething method
+	void doSomething();
+
+	int getGoldCount();
+
+	void incrementGoldCount();
+
+	// destructor
+	~Tunnelman();
+
 	// doSomething method
 	void doSomething();
 
+	void dropGold();
 };
 
 
@@ -102,7 +117,9 @@ public:
 	// destructor
 	~Goodie();
 
-	virtual void pickupItem() = 0;
+	bool canBeRevealed() override { return true; }
+
+	virtual int pickupItem() = 0;
 };
 
 class Barrel : public Goodie
@@ -116,10 +133,27 @@ public:
 	//destructor 
 	~Barrel();
 
-	void pickupItem();
+	int pickupItem();
 
 	void doSomething();
 };
 
+class Gold : public Goodie
+{
+private:
+	bool createdByPlayer;
+public:
+	// constructor
+	Gold(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w, bool createdByPlayer);
+
+	// destructor
+	~Gold();
+
+	bool canBeRevealed() override;
+
+	int pickupItem();
+
+	void doSomething();
+};
 
 #endif // ACTOR_H_

@@ -42,15 +42,22 @@ int StudentWorld::init()
 {
 	srand(time(0));
 
+	int G = max(static_cast<int>(5 - getLevel() / 2), 2);
 	int L = min(static_cast<int>(2 + getLevel()), 21);
 	barrelCount = L;
 
-	// TODO: make sure barrels can't spawn too close to one another
+	// TODO: make sure goodies can't spawn too close to one another
 	for (int i = 0; i < L; i++)
 	{
 		int randx = int(rand() % 61);
 		int randy = int(rand() % 57);
 		actors.push_back(new Barrel(randx, randy, GraphObject::right, 1.0, 2, this));
+	}
+	for (int i = 0; i < G; i++)
+	{
+		int randx = int(rand() % 61);
+		int randy = int(rand() % 57);
+		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this, false));
 	}
 
 	// initialize tunnelman
@@ -85,8 +92,9 @@ void StudentWorld::setDisplayText()
 	int level = getLevel();
 	int barrelsLeft = barrelCount;
 	int score = getScore();
+	int gold = tunnelman->getGoldCount();
 
-	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score);
+	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " + to_string(gold);
 	setGameStatText(s);
 }
 
@@ -161,15 +169,18 @@ void StudentWorld::showObjectsNearPlayer()
 
 	for (Object* actor : actors)
 	{
-		if (dynamic_cast<Barrel*>(actor) != nullptr && actor->isAlive())
+		if (actor->canBeRevealed() && actor->isAlive())
 		{
 			int bx = actor->getX();
 			int by = actor->getY();
 			float dist = measureDistance(tx, ty, bx, by);
 			if (dist <= 3.0)
 			{
-				dynamic_cast<Barrel*>(actor)->pickupItem();
-				barrelCount--;
+				int itemId = dynamic_cast<Goodie*>(actor)->pickupItem();
+				if (itemId == TID_BARREL)
+					barrelCount--;
+				if (itemId == TID_GOLD)
+					tunnelman->incrementGoldCount();
 			}
 			else if (dist <= 4.0)
 			{
@@ -177,6 +188,11 @@ void StudentWorld::showObjectsNearPlayer()
 			}
 		}
 	}
+}
+
+void StudentWorld::spawnGold(Tunnelman* tunnelman)
+{
+	actors.push_back(new Gold(tunnelman->getX(), tunnelman->getY(), GraphObject::right, 1.0, 2, this, true));
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the
