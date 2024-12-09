@@ -77,6 +77,7 @@ int StudentWorld::init()
 
 	int G = max(static_cast<int>(5 - getLevel() / 2), 2);
 	int L = min(static_cast<int>(2 + getLevel()), 21);
+	int B = min(static_cast<int>(getLevel() / 2 + 2), 9);
 	barrelCount = L;
 
 	for (int i = 0; i < L; i++)
@@ -94,6 +95,14 @@ int StudentWorld::init()
 		validatePosition(randx, randy);
 
 		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this, false));
+	}
+	for (int i = 0; i < B; i++)
+	{
+		int randx;
+		int randy;
+		validatePosition(randx, randy);
+
+		actors.push_back(new Boulder(randx, randy, GraphObject::down, 1.0, 1, this));
 	}
 
 	// initialize tunnelman
