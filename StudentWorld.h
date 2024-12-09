@@ -38,6 +38,8 @@ public:
 
 	bool digEarth(int i, int j);
 
+	bool existingEarth(int i, int j);
+
 	// init method must create the Tunnelman object and insert it into the oil field at the right
 	// starting location, Creates all of the oil field’s Earth objects and inserts them into a
 	// data structure that tracks active Earth
