@@ -35,6 +35,15 @@ bool StudentWorld::digEarth(int i, int j)
 	return false;
 }
 
+bool StudentWorld::existingEarth(int i, int j)
+{
+	if (clearedEarth[i][j] == false)
+	{
+		return true;
+	}
+	return false;
+}
+
 void StudentWorld::validatePosition(int& x, int& y)
 {
 	while (true)
