@@ -103,6 +103,9 @@ public:
 class Boulder : public Object {
 private:
 	std::string state;
+	int tick_counter;
+	int currX;
+	int currY;
 
 public:
 
@@ -115,7 +118,7 @@ public:
 	// doSomething method
 	void doSomething();
 
-	std::string getState();
+	bool checkForBoulder();
 
 };
 

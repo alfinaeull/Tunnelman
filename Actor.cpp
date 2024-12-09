@@ -63,7 +63,11 @@ void Earth::doSomething()
 Boulder::Boulder(int startX, int startY, Direction dir = down, double size = 1.0, unsigned int depth = 1, StudentWorld* sw = nullptr)
 	: Object(TID_BOULDER, startX, startY, dir, size, depth, sw)
 {
+	state = "stable";
+	tick_counter = 0;
 
+	currX = startX;
+	currY = startY;
 }
 
 // destructor
@@ -75,12 +79,67 @@ Boulder::~Boulder()
 // doSomething method
 void Boulder::doSomething()
 {
+	// check if alive
+	if (isAlive() != true) {
+		return;
+	}
 
+	// increment tick_counter if it's started
+	if (tick_counter > 0) {
+		tick_counter++;
+	}
+
+	if (state == "stable") {
+
+		// don't do anything, just return if there is Earth 4 squares or less beneath boulder
+		for (int i = currX; i < currX + 4; i++) {
+
+			if (i < 64 && currY - 1 >= 0 && getWorld()->existingEarth(i, currY-1)) {
+
+				return;
+			}
+		}
+
+		// but if any of the 4 squares beneath don't have Earth, transition into waiting state
+		state = "waiting";
+		tick_counter++; // start the tick_counter
+	}
+
+	// once tick_counter reaches 30, transition into falling state
+	if (tick_counter == 30) {
+
+		state = "falling";
+		getWorld()->playSound(SOUND_FALLING_ROCK);
+	}
+
+	// if boulder is in falling state, it moves down 1 every tick until
+	// a) hits bottom of oil field
+	// b) runs into the top of another boulder
+	// c) runs into earth
+	// at any of those points, set state to dead
+	if (state == "falling") {
+
+		if (currY - 1 < 0 || checkForBoulder() || getWorld()->existingEarth(currX, currY - 1)) {
+
+			state = "dead";
+		}
+		else {
+			// if none of the conditions are met, move down 1 tick
+			moveTo(currX, currY - 1);
+			currY--;
+		}
+
+		// code for boulder interactions with protestors and tunnelman
+	}
+
+	if (state == "dead") {
+		setState(false);
+	}
 }
 
-std::string Boulder::getState()
+bool Boulder::checkForBoulder()
 {
-	return state;
+	return true;
 }
 
 
