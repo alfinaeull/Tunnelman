@@ -72,8 +72,8 @@ int StudentWorld::init()
 
 	for (int i = 0; i < L; i++)
 	{
-		int randx; 
-		int randy; 
+		int randx;
+		int randy;
 		validatePosition(randx, randy);
 
 		actors.push_back(new Barrel(randx, randy, GraphObject::right, 1.0, 2, this));
@@ -100,6 +100,15 @@ int StudentWorld::init()
 		}
 	}
 
+	// add top four rows of walkable area to clearedEarth array
+	for (int i = 0; i < 64; i++)
+	{
+		for (int j = 60; j < 64; j++)
+		{
+			clearedEarth[i][j] = true;
+		}
+	}
+
 	// clear vertical shaft down Earth field
 	for (int i = 30; i < 34; i++) {
 
@@ -121,8 +130,10 @@ void StudentWorld::setDisplayText()
 	int score = getScore();
 	int gold = tunnelman->getGoldCount();
 	int sonars = tunnelman->getSonarCount();
+	int squirts = tunnelman->getSquirtCount();
 
-	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " + to_string(gold) + " Sonars: " + to_string(sonars);
+	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
+		to_string(gold) + " Sonars: " + to_string(sonars) + " Squirts: " + to_string(squirts);
 	setGameStatText(s);
 }
 
@@ -152,6 +163,8 @@ int StudentWorld::move()
 	}
 
 	setDisplayText();
+	showObjectsNearPlayer(4);
+	pickupObjectsNearPlayer();
 
 	tunnelman->doSomething();
 	for (auto actor : actors)
@@ -249,9 +262,47 @@ void StudentWorld::pickupObjectsNearPlayer()
 	}
 }
 
-void StudentWorld::spawnGold(Tunnelman* tunnelman)
+void StudentWorld::spawnGold()
 {
 	actors.push_back(new Gold(tunnelman->getX(), tunnelman->getY(), GraphObject::right, 1.0, 2, this, true));
+}
+
+void StudentWorld::spawnSquirt()
+{
+	GraphObject::Direction dir = tunnelman->getDirection();
+	int spawnx = tunnelman->getX();
+	int spawny = tunnelman->getY();
+	switch (dir)
+	{
+	case GraphObject::up:
+		spawny += 4;
+		break;
+	case GraphObject::down:
+		spawny -= 4;
+		break;
+	case GraphObject::right:
+		spawnx += 4;
+		break;
+	case GraphObject::left:
+		spawnx -= 4;
+		break;
+	}
+
+	if (spawnx < 0 || spawnx > 60 || spawny > 60 || spawny < 0)
+	{
+		return;
+	}
+
+	for (int i = spawnx; i < spawnx + 4; i++) {
+		for (int j = spawny; j < spawny + 4; j++) {
+			if (this->clearedEarth[i][j] == false)
+			{
+				return;
+			}
+		}
+	}
+
+	actors.push_back(new Squirt(spawnx, spawny, dir, 1.0, 1, this));
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the

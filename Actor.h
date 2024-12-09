@@ -43,7 +43,7 @@ private:
 public:
 	// constructor
 	Earth(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
-  
+
 	// destructor
 	~Earth();
 
@@ -57,7 +57,8 @@ private:
 	int currX;
 	int currY;
 	int goldCount;
-	int sonarCount;
+	int sonarCount = 1;
+	int squirtCount = 5;
 
 public:
 	// constructor
@@ -74,12 +75,16 @@ public:
 
 	void incrementSonarCount();
 
+	int getSquirtCount();
+
 	// doSomething method
 	void doSomething();
 
 	void dropGold();
-	
+
 	void useSonar();
+
+	void shootSquirt();
 };
 
 class Squirt : public Object {
@@ -99,7 +104,7 @@ class Boulder : public Object {
 private:
 	std::string state;
 
-public: 
+public:
 
 	// constructor
 	Boulder(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* sw);
@@ -181,7 +186,7 @@ public:
 	~Sonar();
 
 	int pickupItem();
-	
+
 	void doSomething();
 };
 

@@ -17,44 +17,46 @@ class Object;
 
 class StudentWorld : public GameWorld
 {
-	private:
-		Tunnelman* tunnelman;
-		Earth* earthField[64][60];
-		bool clearedEarth[64][60] = { false };
-		std::vector<Object*> actors;
-		int barrelCount;
+private:
+	Tunnelman* tunnelman;
+	Earth* earthField[64][60];
+	bool clearedEarth[64][64] = { false };
+	std::vector<Object*> actors;
+	int barrelCount;
 
-		float measureDistance(int x1, int y1, int x2, int y2);
-		void removeDeadGameObjects();
-		void setDisplayText();
-		void validatePosition(int& x, int& y);
+	float measureDistance(int x1, int y1, int x2, int y2);
+	void removeDeadGameObjects();
+	void setDisplayText();
+	void validatePosition(int& x, int& y);
 
-	public:
-		// constructor
-		StudentWorld(std::string assetDir);
+public:
+	// constructor
+	StudentWorld(std::string assetDir);
 
-		// destructor
-		~StudentWorld();
+	// destructor
+	~StudentWorld();
 
-		bool digEarth(int i, int j);
+	bool digEarth(int i, int j);
 
-		// init method must create the Tunnelman object and insert it into the oil field at the right
-		// starting location, Creates all of the oil field’s Earth objects and inserts them into a
-		// data structure that tracks active Earth
-		virtual int init();
+	// init method must create the Tunnelman object and insert it into the oil field at the right
+	// starting location, Creates all of the oil field’s Earth objects and inserts them into a
+	// data structure that tracks active Earth
+	virtual int init();
 
-		// move method must, during each tick, ask your Tunnelman object to do something
-		virtual int move();
+	// move method must, during each tick, ask your Tunnelman object to do something
+	virtual int move();
 
-		void showObjectsNearPlayer(int revealed);
+	void showObjectsNearPlayer(int revealed);
 
-		void pickupObjectsNearPlayer();
+	void pickupObjectsNearPlayer();
 
-		void spawnGold(Tunnelman* tunnelman);
+	void spawnGold();
 
-		// cleanUp method must free any dynamically allocated data that was allocated during calls to the
-		// init() method or the move() method (will likely do the same thing as the destructor)
-		virtual void cleanUp();
+	void spawnSquirt();
+
+	// cleanUp method must free any dynamically allocated data that was allocated during calls to the
+	// init() method or the move() method (will likely do the same thing as the destructor)
+	virtual void cleanUp();
 };
 
 #endif // STUDENTWORLD_H_
