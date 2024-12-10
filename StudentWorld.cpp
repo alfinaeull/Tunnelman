@@ -39,21 +39,34 @@ void StudentWorld::removeBoulder(int i, int j)
 {
 	for (int x = i; x < i + 4; x++) {
 		for (int y = j; y < j + 4; y++) {
-			isBoulder[i][j] = false;
+			isBoulder[x][y] = false;
 		}
 	}
 }
 
-bool StudentWorld::existingTerrain(int i, int j, std::string s)
+bool StudentWorld::existingTerrain(int i, int j, int width, int height, std::string s)
 {
-	if (s == "Boulder")
+	for (int x = i; x < i + width; x++)
 	{
-		return (isBoulder[i][j]);
+		for (int y = j; y < j + height; y++)
+		{
+			if (s == "Boulder")
+			{
+				if (isBoulder[x][y] == true)
+				{
+					return true;
+				}
+			}
+			if (s == "Earth")
+			{
+				if (clearedEarth[x][y] == false)
+				{
+					return true;
+				}
+			}
+		}
 	}
-	if (s == "Earth")
-	{
-		return (!clearedEarth[i][j]);
-	}
+	return false;
 }
 
 void StudentWorld::validatePosition(int& x, int& y)

@@ -94,7 +94,7 @@ void Boulder::doSomething()
 		// don't do anything, just return if there is Earth 4 squares or less beneath boulder
 		for (int i = currX; i < currX + 4; i++) {
 
-			if (i < 64 && currY - 1 >= 0 && getWorld()->existingTerrain(i, currY - 1, "Earth")) {
+			if (i < 64 && currY - 1 >= 0 && getWorld()->existingTerrain(i, currY - 1, 1, 1, "Earth")) {
 
 				return;
 			}
@@ -120,7 +120,7 @@ void Boulder::doSomething()
 	// at any of those points, set state to dead
 	if (state == "falling") {
 
-		if (currY - 1 < 0 || getWorld()->existingTerrain(currX, currY - 1, "Boulder") || getWorld()->existingTerrain(currX, currY - 1, "Earth")) {
+		if (currY - 1 < 0 || getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Boulder") || getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Earth")) {
 
 			state = "dead";
 		}
@@ -176,7 +176,7 @@ void Tunnelman::doSomething()
 			setDirection(left);
 			if (currX != LEFT_EDGE)
 			{
-				if (getWorld()->existingTerrain(currX - 1, currY, "Boulder"))
+				if (getWorld()->existingTerrain(currX - 1, currY, 1, 4, "Boulder"))
 				{
 					break;
 				}
@@ -195,7 +195,7 @@ void Tunnelman::doSomething()
 			}
 			if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
 			{
-				if (getWorld()->existingTerrain(currX + 1, currY, "Boulder"))
+				if (getWorld()->existingTerrain(currX + 1 + TUNNELMAN_SIZE, currY, 1, 4, "Boulder"))
 				{
 					break;
 				}
@@ -214,7 +214,7 @@ void Tunnelman::doSomething()
 			}
 			if (currY != TOP_EDGE)
 			{
-				if (getWorld()->existingTerrain(currX, currY + 1, "Boulder"))
+				if (getWorld()->existingTerrain(currX, currY + TUNNELMAN_SIZE + 1, 4, 1, "Boulder"))
 				{
 					break;
 				}
@@ -233,7 +233,7 @@ void Tunnelman::doSomething()
 			}
 			if (currY != BOTTOM_EDGE)
 			{
-				if (getWorld()->existingTerrain(currX, currY - 1, "Boulder"))
+				if (getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Boulder"))
 				{
 					break;
 				}
