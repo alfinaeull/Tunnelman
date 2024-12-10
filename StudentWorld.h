@@ -5,6 +5,7 @@
 #include "GameConstants.h"
 #include <string>
 #include <vector>
+#include <functional>
 
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 // contains your StudentWorld class declaration
@@ -21,6 +22,7 @@ private:
 	Tunnelman* tunnelman;
 	Earth* earthField[64][60];
 	bool clearedEarth[64][64] = { false };
+	bool isBoulder[64][64] = { false };
 	std::vector<Object*> actors;
 	int barrelCount;
 
@@ -38,7 +40,9 @@ public:
 
 	bool digEarth(int i, int j);
 
-	bool existingEarth(int i, int j);
+	void removeBoulder(int i, int j);
+
+	bool existingTerrain(int i, int j, std::string s);
 
 	// init method must create the Tunnelman object and insert it into the oil field at the right
 	// starting location, Creates all of the oil field’s Earth objects and inserts them into a

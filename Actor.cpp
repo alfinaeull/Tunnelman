@@ -94,7 +94,7 @@ void Boulder::doSomething()
 		// don't do anything, just return if there is Earth 4 squares or less beneath boulder
 		for (int i = currX; i < currX + 4; i++) {
 
-			if (i < 64 && currY - 1 >= 0 && getWorld()->existingEarth(i, currY-1)) {
+			if (i < 64 && currY - 1 >= 0 && getWorld()->existingTerrain(i, currY - 1, "Earth")) {
 
 				return;
 			}
@@ -109,6 +109,7 @@ void Boulder::doSomething()
 	if (tick_counter == 30) {
 
 		state = "falling";
+		getWorld()->removeBoulder(getX(), getY());
 		getWorld()->playSound(SOUND_FALLING_ROCK);
 	}
 
@@ -119,7 +120,7 @@ void Boulder::doSomething()
 	// at any of those points, set state to dead
 	if (state == "falling") {
 
-		if (currY - 1 < 0 || checkForBoulder() || getWorld()->existingEarth(currX, currY - 1)) {
+		if (currY - 1 < 0 || getWorld()->existingTerrain(currX, currY - 1, "Boulder") || getWorld()->existingTerrain(currX, currY - 1, "Earth")) {
 
 			state = "dead";
 		}
@@ -136,12 +137,6 @@ void Boulder::doSomething()
 		setState(false);
 	}
 }
-
-bool Boulder::checkForBoulder()
-{
-	return true;
-}
-
 
 // constructor
 Tunnelman::Tunnelman(int startX = 30, int startY = 60, Direction dir = right, double size = 1.0, unsigned int depth = 0, StudentWorld* sw = nullptr)
@@ -181,6 +176,10 @@ void Tunnelman::doSomething()
 			setDirection(left);
 			if (currX != LEFT_EDGE)
 			{
+				if (getWorld()->existingTerrain(currX - 1, currY, "Boulder"))
+				{
+					break;
+				}
 				currX--;
 				moveTo(currX, currY);
 			}
@@ -196,6 +195,10 @@ void Tunnelman::doSomething()
 			}
 			if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
 			{
+				if (getWorld()->existingTerrain(currX + 1, currY, "Boulder"))
+				{
+					break;
+				}
 				currX++;
 				moveTo(currX, currY);
 			}
@@ -211,6 +214,10 @@ void Tunnelman::doSomething()
 			}
 			if (currY != TOP_EDGE)
 			{
+				if (getWorld()->existingTerrain(currX, currY + 1, "Boulder"))
+				{
+					break;
+				}
 				currY++;
 				moveTo(currX, currY);
 			}
@@ -226,6 +233,10 @@ void Tunnelman::doSomething()
 			}
 			if (currY != BOTTOM_EDGE)
 			{
+				if (getWorld()->existingTerrain(currX, currY - 1, "Boulder"))
+				{
+					break;
+				}
 				currY--;
 				moveTo(currX, currY);
 			}

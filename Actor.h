@@ -118,8 +118,6 @@ public:
 	// doSomething method
 	void doSomething();
 
-	bool checkForBoulder();
-
 };
 
 
