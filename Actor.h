@@ -194,21 +194,21 @@ public:
 };
 
 
-// base class for RegularProtestor and HardcoreProtestor
-class Protestor : public Object {
+// base class for RegularProtester and HardcoreProtester
+class Protester : public Object {
 private:
-	int numSquaresToMoveInCurrentDirection;
+	int numSquaresToMoveInCurrentDirection = 0;
 
-	int hit_pts;
+	int hit_pts = 0;
 
 	std::string state;
 
 public:
 	// constructor
-	Protestor(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
 
 	// destructor
-	~Protestor();
+	~Protester();
 
 	virtual void doSomething();
 
