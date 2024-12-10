@@ -203,6 +203,9 @@ private:
 
 	std::string state;
 
+	int currX;
+	int currY;
+
 public:
 	// constructor
 	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
