@@ -56,7 +56,7 @@ class Tunnelman : public Object {
 private:
 	int currX;
 	int currY;
-	int goldCount;
+	int goldCount = 0;
 	int sonarCount = 1;
 	int squirtCount = 5;
 
