@@ -504,3 +504,19 @@ void Sonar::doSomething()
 		return;
 	}
 }
+
+Protester::Protester(int imageID, int startX, int startY, Direction dir = left, double size = 1.0, unsigned int depth = 0, StudentWorld* w)
+	: Object(TID_PROTESTER, startX, startY, dir, size, depth, w)
+{
+
+}
+
+Protester::~Protester()
+{
+
+}
+
+void Protester::doSomething()
+{
+
+}
