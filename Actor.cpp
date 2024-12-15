@@ -195,7 +195,7 @@ void Tunnelman::doSomething()
 			}
 			if (currX != RIGHT_EDGE - TUNNELMAN_SIZE)
 			{
-				if (getWorld()->existingTerrain(currX + 1 + TUNNELMAN_SIZE, currY, 1, 4, "Boulder"))
+				if (getWorld()->existingTerrain(currX + TUNNELMAN_SIZE, currY, 1, 4, "Boulder"))
 				{
 					break;
 				}
@@ -214,7 +214,7 @@ void Tunnelman::doSomething()
 			}
 			if (currY != TOP_EDGE)
 			{
-				if (getWorld()->existingTerrain(currX, currY + TUNNELMAN_SIZE + 1, 4, 1, "Boulder"))
+				if (getWorld()->existingTerrain(currX, currY + TUNNELMAN_SIZE, 4, 1, "Boulder"))
 				{
 					break;
 				}
