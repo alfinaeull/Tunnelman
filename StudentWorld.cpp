@@ -77,7 +77,7 @@ void StudentWorld::validatePosition(int& x, int& y)
 		y = int(rand() % 57);
 		bool validated = true;
 
-		if ((x > 30 && x < 34 && y > 4))
+		if ((x > 26 && x < 34))
 		{
 			continue;
 		}
