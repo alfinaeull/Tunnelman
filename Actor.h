@@ -193,4 +193,12 @@ public:
 	void doSomething();
 };
 
+class Pool : public Goodie
+{
+private:
+	int timer = 0;
+public:
+	Pool(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+};
+
 #endif // ACTOR_H_
