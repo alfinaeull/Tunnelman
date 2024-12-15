@@ -126,8 +126,8 @@ public:
 class Goodie : public Object
 {
 private:
-	int x;
-	int y;
+protected:
+	int timer;
 public:
 	// constructor
 	Goodie(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
@@ -159,7 +159,6 @@ public:
 class Gold : public Goodie
 {
 private:
-	int timer = 0;
 	bool createdByPlayer;
 public:
 	// constructor
@@ -178,7 +177,6 @@ public:
 class Sonar : public Goodie
 {
 private:
-	int timer = 0;
 public:
 	// constructor
 	Sonar(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
@@ -194,9 +192,17 @@ public:
 class Pool : public Goodie
 {
 private:
-	int timer = 0;
 public:
+	// constructor
 	Pool(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	// destructor
+	~Pool();
+
+	int pickupItem();
+
+	void doSomething();
+
 };
 
 #endif // ACTOR_H_
