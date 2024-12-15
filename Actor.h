@@ -191,4 +191,29 @@ public:
 	void doSomething();
 };
 
+
+// base class for RegularProtester and HardcoreProtester
+class Protester : public Object {
+private:
+	int numSquaresToMoveInCurrentDirection = 0;
+
+	int hit_pts = 0;
+
+	std::string state;
+
+	int currX;
+	int currY;
+
+public:
+	// constructor
+	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+
+	// destructor
+	~Protester();
+
+	virtual void doSomething();
+
+
+};
+
 #endif // ACTOR_H_

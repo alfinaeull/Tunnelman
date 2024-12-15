@@ -515,3 +515,22 @@ void Sonar::doSomething()
 		return;
 	}
 }
+
+Protester::Protester(int imageID, int startX = 30, int startY = 60, Direction dir = left, double size = 1.0, unsigned int depth = 0, StudentWorld* w)
+	: Object(TID_PROTESTER, startX, startY, dir, size, depth, w)
+{
+	currX = startX;
+	currY = startY;
+
+	state = "moving"; // moving, resting, or leave-the-oil-field
+}
+
+Protester::~Protester()
+{
+
+}
+
+void Protester::doSomething()
+{
+
+}
