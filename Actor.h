@@ -197,6 +197,7 @@ public:
 class Protester : public Object {
 protected:
 	int numSquaresToMoveInCurrentDirection = 0;
+	int restTimer = 0;
 	int stepCount = 0;
 	int hit_pts = 0;
 
@@ -219,7 +220,7 @@ public:
 	~Protester();
 };
 
-class RegProtester : public Object {
+class RegProtester : public Protester {
 private:
 public:
 	// constructor

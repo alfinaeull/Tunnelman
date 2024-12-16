@@ -176,7 +176,7 @@ int StudentWorld::init()
 
 	}
 
-	actors.push_back(new RegProtester(60, 60, GraphObject::right, 1.0, 0, this));
+	actors.push_back(new RegProtester(60, 60, GraphObject::left, 1.0, 0, this));
 
 	return GWSTATUS_CONTINUE_GAME;
 }

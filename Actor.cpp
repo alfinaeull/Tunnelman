@@ -522,7 +522,7 @@ Protester::~Protester()
 }
 
 RegProtester::RegProtester(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
-	: Object(TID_PROTESTER, startX, startY, dir, size, depth, w)
+	: Protester(TID_PROTESTER, startX, startY, dir, size, depth, w)
 {
 
 }
@@ -537,6 +537,17 @@ void RegProtester::doSomething()
 	if (!isAlive())
 	{
 		return;
+	}
+	// std::max(50, int(100 - getWorld()->getLevel() * 10)); 
+	int ticksToWaitBetweenMoves = std::max(0, int(3 - getWorld()->getLevel() / 4));
+	if (restTimer < ticksToWaitBetweenMoves)
+	{
+		restTimer++;
+		return;
+	}
+	else
+	{
+		restTimer = 0;
 	}
 
 	int dir = getWorld()->protesterLineOfSight(getX(), getY());
