@@ -35,11 +35,36 @@ bool StudentWorld::digEarth(int i, int j)
 	return false;
 }
 
-bool StudentWorld::existingEarth(int i, int j)
+void StudentWorld::removeBoulder(int i, int j)
 {
-	if (clearedEarth[i][j] == false)
+	for (int x = i; x < i + 4; x++) {
+		for (int y = j; y < j + 4; y++) {
+			isBoulder[x][y] = false;
+		}
+	}
+}
+
+bool StudentWorld::existingTerrain(int i, int j, int width, int height, std::string s)
+{
+	for (int x = i; x < i + width; x++)
 	{
-		return true;
+		for (int y = j; y < j + height; y++)
+		{
+			if (s == "Boulder")
+			{
+				if (isBoulder[x][y] == true)
+				{
+					return true;
+				}
+			}
+			if (s == "Earth")
+			{
+				if (clearedEarth[x][y] == false)
+				{
+					return true;
+				}
+			}
+		}
 	}
 	return false;
 }
@@ -51,6 +76,11 @@ void StudentWorld::validatePosition(int& x, int& y)
 		x = int(rand() % 61);
 		y = int(rand() % 57);
 		bool validated = true;
+
+		if ((x > 26 && x < 34))
+		{
+			continue;
+		}
 
 		for (Object* actor : actors)
 		{
@@ -96,14 +126,6 @@ int StudentWorld::init()
 
 		actors.push_back(new Gold(randx, randy, GraphObject::right, 1.0, 2, this, false));
 	}
-	for (int i = 0; i < B; i++)
-	{
-		int randx;
-		int randy;
-		validatePosition(randx, randy);
-
-		actors.push_back(new Boulder(randx, randy, GraphObject::down, 1.0, 1, this));
-	}
 
 	// initialize tunnelman
 	tunnelman = new Tunnelman(30, 60, GraphObject::right, 1.0, 0, this);
@@ -125,6 +147,22 @@ int StudentWorld::init()
 		{
 			clearedEarth[i][j] = true;
 		}
+	}
+
+	for (int i = 0; i < B; i++)
+	{
+		int randx;
+		int randy;
+		validatePosition(randx, randy);
+		for (int i = randx; i < randx + 4; i++) {
+			for (int j = randy; j < randy + 4; j++) {
+
+				earthField[i][j]->setVisible(false);
+				clearedEarth[i][j] = true;
+				isBoulder[i][j] = true;
+			}
+		}
+		actors.push_back(new Boulder(randx, randy, GraphObject::down, 1.0, 1, this));
 	}
 
 	// clear vertical shaft down Earth field
