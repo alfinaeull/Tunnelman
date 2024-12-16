@@ -365,6 +365,11 @@ void Squirt::doSomething()
 	{
 		return;
 	}
+	if (getWorld()->processSquirtDamage(getX(), getY()))
+	{
+		setState(false);
+		return;
+	}
 	GraphObject::Direction dir = getDirection();
 	switch (dir)
 	{
@@ -527,6 +532,27 @@ void Sonar::doSomething()
 	}
 }
 
+void Protester::decrementHealth(int damage)
+{
+	if (hp <= 0)
+	{
+		return;
+	}
+	if (damage < hp)
+	{
+		this->hp -= damage;
+		stunTimer = std::max(50, int(100 - getWorld()->getLevel() * 10));
+		getWorld()->playSound(SOUND_PROTESTER_ANNOYED);
+		return;
+	}
+	if (damage >= hp)
+	{
+		getWorld()->increaseScore(100);
+		state = "leaving";
+		return;
+	}
+}
+
 Protester::~Protester()
 {
 
@@ -535,7 +561,8 @@ Protester::~Protester()
 RegProtester::RegProtester(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
 	: Protester(TID_PROTESTER, startX, startY, dir, size, depth, w)
 {
-
+	hp = 5;
+	numSquaresToMoveInCurrentDirection = rand() % 53 + 8;
 }
 
 RegProtester::~RegProtester()
@@ -550,9 +577,8 @@ void RegProtester::doSomething()
 	{
 		return;
 	}
+
 	restTimer++;
-	// std::max(50, int(100 - getWorld()->getLevel() * 10)); 
-	// check if protester should be resting
 	int ticksToWaitBetweenMoves = std::max(0, int(3 - getWorld()->getLevel() / 4));
 	if (restTimer < ticksToWaitBetweenMoves)
 	{
@@ -564,8 +590,98 @@ void RegProtester::doSomething()
 		shoutCooldown++;
 	}
 
+	if (state == "leaving")
+	{
+		if (getX() == 60 && getY() == 60)
+		{
+			setState(false);
+			return;
+		}
+		int dir;
+		dir = getWorld()->findExit(getX(), getY());
+		if (dir == GraphObject::up)
+		{
+			setDirection(GraphObject::up);
+			moveTo(getX(), getY() + 1);
+			return;
+		}
+		if (dir == GraphObject::down)
+		{
+			setDirection(GraphObject::down);
+			moveTo(getX(), getY() - 1);
+			return;
+		}
+		if (dir == GraphObject::right)
+		{
+			setDirection(GraphObject::right);
+			moveTo(getX() + 1, getY());
+			return;
+		}
+		if (dir == GraphObject::left)
+		{
+			setDirection(GraphObject::left);
+			moveTo(getX() - 1, getY());
+			return;
+		}
+	}
+
+	if (stunTimer > 0)
+	{
+		stunTimer--;
+		return;
+	}
+
 	int dir = getWorld()->protesterLineOfSight(getX(), getY());
 	if (dir != GraphObject::none)
+	{
+		if (dir == GraphObject::up)
+		{
+			setDirection(GraphObject::up);
+			moveTo(getX(), getY() + 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+		if (dir == GraphObject::down)
+		{
+			setDirection(GraphObject::down);
+			moveTo(getX(), getY() - 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+		if (dir == GraphObject::right)
+		{
+			setDirection(GraphObject::right);
+			moveTo(getX() + 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+		if (dir == GraphObject::left)
+		{
+			setDirection(GraphObject::left);
+			moveTo(getX() - 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+	}
+	if (shoutCooldown >= 15)
+	{
+		if (getWorld()->shoutAtTunnelman(getX(), getY()) == true)
+		{
+			getWorld()->playSound(SOUND_PROTESTER_YELL);
+			shoutCooldown = 0;
+		}
+		return;
+	}
+	dir = getDirection();
+	if (numSquaresToMoveInCurrentDirection != 0)
 	{
 		if (dir == GraphObject::up)
 		{
@@ -600,13 +716,5 @@ void RegProtester::doSomething()
 			return;
 		}
 	}
-	if (shoutCooldown >= 15)
-	{
-		if (getWorld()->shoutAtTunnelman(getX(), getY()) == true)
-		{
-			getWorld()->playSound(SOUND_PROTESTER_YELL);
-			shoutCooldown = 0;
-		}
-		return;
-	}
+
 }

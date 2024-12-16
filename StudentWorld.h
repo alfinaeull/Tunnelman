@@ -69,6 +69,8 @@ public:
 
 	bool processSquirtDamage(int sx, int sy);
 
+	int findExit(int px, int py);
+
 	// cleanUp method must free any dynamically allocated data that was allocated during calls to the
 	// init() method or the move() method (will likely do the same thing as the destructor)
 	virtual void cleanUp();

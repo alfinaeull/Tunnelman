@@ -442,16 +442,72 @@ int StudentWorld::protesterLineOfSight(int px, int py)
 	return GraphObject::none;
 }
 
+// Returns true if damage was successful
 bool StudentWorld::processSquirtDamage(int sx, int sy)
 {
 	for (Object* actor : actors)
 	{
 		if (actor->canBeDamaged()) // tunnelman is not in this list
 		{
-			// TODO finish this up
+			if (measureDistance(sx, sy, actor->getX(), actor->getY()) <= 3)
+			{
+				static_cast<Protester*>(actor)->decrementHealth(2);
+				return true;
+			}
 		}
 	}
-	return true;
+	return false;
+}
+
+int StudentWorld::findExit(int px, int py)
+{
+	int lowestValue = 100;
+	GraphObject::Direction dir = GraphObject::none;
+	if (!existingTerrain(px, py + 4, 4, 1, "Any"))
+	{
+		for (int i = px; i < px + 4; i++)
+		{
+			if (distanceMap[i][py + 4] < lowestValue)
+			{
+				lowestValue = distanceMap[i][py + 4];
+				dir = GraphObject::up;
+			}
+		}
+	}
+	if (!existingTerrain(px + 4, py, 1, 4, "Any"))
+	{
+		for (int j = py; j < py + 4; j++)
+		{
+			if (distanceMap[px + 4][j] < lowestValue)
+			{
+				lowestValue = distanceMap[px + 4][j];
+				dir = GraphObject::right;
+			}
+		}
+	}
+	if (!existingTerrain(px, py - 1, 4, 1, "Any"))
+	{
+		for (int i = px; i < px + 4; i++)
+		{
+			if (distanceMap[i][py - 1] < lowestValue)
+			{
+				lowestValue = distanceMap[i][py - 1];
+				dir = GraphObject::down;
+			}
+		}
+	}
+	if (!existingTerrain(px - 1, py, 1, 4, "Any"))
+	{
+		for (int j = py - 1; j < py; j++)
+		{
+			if (distanceMap[px - 1][j] < lowestValue)
+			{
+				lowestValue = distanceMap[px - 1][j];
+				dir = GraphObject::left;
+			}
+		}
+	}
+	return dir;
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the

@@ -209,8 +209,9 @@ protected:
 	int numSquaresToMoveInCurrentDirection = 0;
 	int restTimer = 0;
 	int stepCount = 0;
-	int hit_pts = 0;
+	int hp = 0;
 	int shoutCooldown = 0;
+	int stunTimer = 0;
 
 	std::string state;
 
@@ -226,6 +227,8 @@ public:
 		currY = startY;
 		state = "moving";
 	}
+
+	void decrementHealth(int damage);
 
 	bool canBeDamaged() { return true; }
 
