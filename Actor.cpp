@@ -571,24 +571,32 @@ void RegProtester::doSomething()
 		{
 			setDirection(GraphObject::up);
 			moveTo(getX(), getY() + 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
 			return;
 		}
 		if (dir == GraphObject::down)
 		{
 			setDirection(GraphObject::down);
 			moveTo(getX(), getY() - 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
 			return;
 		}
 		if (dir == GraphObject::right)
 		{
 			setDirection(GraphObject::right);
 			moveTo(getX() + 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
 			return;
 		}
 		if (dir == GraphObject::left)
 		{
 			setDirection(GraphObject::left);
 			moveTo(getX() - 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
 			return;
 		}
 	}

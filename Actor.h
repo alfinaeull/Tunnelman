@@ -27,6 +27,9 @@ public:
 	// used to identify classes gold and barrel which are not initially visible to player
 	virtual bool canBeRevealed() { return false; }
 
+	// used to identify classes like protesters and tunnelman who can be annoyed
+	virtual bool canBeDamaged() { return false; }
+
 	// returns pointer to StudentWorld
 	StudentWorld* getWorld() const;
 
@@ -91,6 +94,8 @@ public:
 	void shootSquirt();
 
 	int getSquirtCount();
+
+	bool canBeDamaged() { return true; }
 };
 
 class Squirt : public Object {
@@ -221,6 +226,8 @@ public:
 		currY = startY;
 		state = "moving";
 	}
+
+	bool canBeDamaged() { return true; }
 
 	// destructor
 	~Protester();

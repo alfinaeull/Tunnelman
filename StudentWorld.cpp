@@ -104,6 +104,13 @@ void StudentWorld::validatePosition(int& x, int& y)
 int StudentWorld::init()
 {
 	srand(time(0));
+	for (int i = 60; i < 64; i++)
+	{
+		for (int j = 60; j < 64; j++)
+		{
+			distanceMap[i][j] = 0;
+		}
+	}
 
 	int G = max(static_cast<int>(5 - getLevel() / 2), 2);
 	int L = min(static_cast<int>(2 + getLevel()), 21);
@@ -433,6 +440,18 @@ int StudentWorld::protesterLineOfSight(int px, int py)
 		}
 	}
 	return GraphObject::none;
+}
+
+bool StudentWorld::processSquirtDamage(int sx, int sy)
+{
+	for (Object* actor : actors)
+	{
+		if (actor->canBeDamaged()) // tunnelman is not in this list
+		{
+			// TODO finish this up
+		}
+	}
+	return true;
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the
