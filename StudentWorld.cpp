@@ -199,7 +199,7 @@ void StudentWorld::setDisplayText()
 	int squirts = tunnelman->getSquirtCount();
 	int lives = getLives();
 
-	string s = "Level: " + to_string(level) + " Health: " + to_string(health) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
+	string s = "Level: " + to_string(level) + " Health: " + to_string(health * 10) + "% Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
 		to_string(gold) + " Sonars: " + to_string(sonars) + " Squirts: " + to_string(squirts) + " Lives: " + to_string(lives);
 	setGameStatText(s);
 }
@@ -452,6 +452,22 @@ bool StudentWorld::processSquirtDamage(int sx, int sy)
 			if (measureDistance(sx, sy, actor->getX(), actor->getY()) <= 3)
 			{
 				static_cast<Protester*>(actor)->decrementHealth(2);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool StudentWorld::processBoulderDamage(int bx, int by)
+{
+	for (Object* actor : actors)
+	{
+		if (actor->canBeDamaged()) // tunnelman is not in this list
+		{
+			if (measureDistance(bx, by, actor->getX(), actor->getY()) <= 4)
+			{
+				static_cast<Protester*>(actor)->decrementHealth(100);
 				return true;
 			}
 		}

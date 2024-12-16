@@ -69,6 +69,8 @@ public:
 
 	bool processSquirtDamage(int sx, int sy);
 
+	bool processBoulderDamage(int bx, int by);
+
 	int findExit(int px, int py);
 
 	// cleanUp method must free any dynamically allocated data that was allocated during calls to the

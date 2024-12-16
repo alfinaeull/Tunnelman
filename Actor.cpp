@@ -120,6 +120,10 @@ void Boulder::doSomething()
 	// at any of those points, set state to dead
 	if (state == "falling") {
 
+		if (getWorld()->processBoulderDamage(getX(), getY()) == true)
+		{
+			getWorld()->increaseScore(400); //other 100 points from the protester class
+		}
 		if (currY - 1 < 0 || getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Boulder") || getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Earth")) {
 
 			state = "dead";
@@ -716,5 +720,4 @@ void RegProtester::doSomething()
 			return;
 		}
 	}
-
 }
