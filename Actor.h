@@ -3,6 +3,7 @@
 
 #include "GraphObject.h"
 #include "StudentWorld.h"
+#include <string>
 
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
@@ -194,9 +195,9 @@ public:
 
 // base class for RegularProtester and HardcoreProtester
 class Protester : public Object {
-private:
+protected:
 	int numSquaresToMoveInCurrentDirection = 0;
-
+	int stepCount = 0;
 	int hit_pts = 0;
 
 	std::string state;
@@ -206,14 +207,28 @@ private:
 
 public:
 	// constructor
-	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
+		: Object(imageID, startX, startY, dir, size, depth, w)
+	{
+		currX = startX;
+		currY = startY;
+		state = "moving";
+	}
 
 	// destructor
 	~Protester();
+};
 
-	virtual void doSomething();
+class RegProtester : public Object {
+private:
+public:
+	// constructor
+	RegProtester(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
 
+	// destructor
+	~RegProtester();
 
+	void doSomething();
 };
 
 #endif // ACTOR_H_

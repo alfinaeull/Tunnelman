@@ -516,21 +516,55 @@ void Sonar::doSomething()
 	}
 }
 
-Protester::Protester(int imageID, int startX = 30, int startY = 60, Direction dir = left, double size = 1.0, unsigned int depth = 0, StudentWorld* w)
-	: Object(TID_PROTESTER, startX, startY, dir, size, depth, w)
-{
-	currX = startX;
-	currY = startY;
-
-	state = "moving"; // moving, resting, or leave-the-oil-field
-}
-
 Protester::~Protester()
 {
 
 }
 
-void Protester::doSomething()
+RegProtester::RegProtester(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
+	: Object(TID_PROTESTER, startX, startY, dir, size, depth, w)
 {
 
+}
+
+RegProtester::~RegProtester()
+{
+
+}
+
+void RegProtester::doSomething()
+{
+	if (!isAlive())
+	{
+		return;
+	}
+
+	int dir = getWorld()->protesterLineOfSight(getX(), getY());
+	if (dir != GraphObject::none)
+	{
+		if (dir == GraphObject::up)
+		{
+			setDirection(GraphObject::up);
+			moveTo(getX(), getY() + 1);
+			return;
+		}
+		if (dir == GraphObject::down)
+		{
+			setDirection(GraphObject::down);
+			moveTo(getX(), getY() - 1);
+			return;
+		}
+		if (dir == GraphObject::right)
+		{
+			setDirection(GraphObject::right);
+			moveTo(getX() + 1, getY());
+			return;
+		}
+		if (dir == GraphObject::left)
+		{
+			setDirection(GraphObject::left);
+			moveTo(getX() - 1, getY());
+			return;
+		}
+	}
 }

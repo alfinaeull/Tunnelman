@@ -176,6 +176,8 @@ int StudentWorld::init()
 
 	}
 
+	actors.push_back(new RegProtester(60, 60, GraphObject::right, 1.0, 0, this));
+
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -359,6 +361,66 @@ void StudentWorld::spawnSquirt()
 	}
 
 	actors.push_back(new Squirt(spawnx, spawny, dir, 1.0, 1, this));
+}
+
+void StudentWorld::updateDistanceMap(int i, int j, int steps)
+{
+	if (distanceMap[i][j] > steps)
+	{
+		distanceMap[i][j] = steps;
+	}
+}
+
+// returns the direction the protester should move in
+int StudentWorld::protesterLineOfSight(int px, int py)
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+
+	if (measureDistance(tx, ty, px, py) <= 4.0)
+	{
+		return GraphObject::none;
+	}
+
+	if (tx == px)
+	{
+		if (ty > py)
+		{
+			if (existingTerrain(px, py, 4, ty - py, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::up;
+		}
+		else if (ty < py)
+		{
+			if (existingTerrain(tx, ty, 4, py - ty, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::down;
+		}
+	}
+	else if (ty == py)
+	{
+		if (tx > px)
+		{
+			if (existingTerrain(px, py, tx - px, 4, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::right;
+		}
+		else if (tx < px)
+		{
+			if (existingTerrain(tx, ty, px - tx, 4, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::left;
+		}
+	}
+	return GraphObject::none;
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the
