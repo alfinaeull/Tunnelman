@@ -25,6 +25,7 @@ private:
 	bool isBoulder[64][64] = { false };
 	std::vector<Object*> actors;
 	int barrelCount;
+	int distanceMap[64][64] = { 100 };
 
 	float measureDistance(int x1, int y1, int x2, int y2);
 	void removeDeadGameObjects();
@@ -56,9 +57,21 @@ public:
 
 	void pickupObjectsNearPlayer();
 
+	bool shoutAtTunnelman(int px, int py);
+
 	void spawnGold();
 
 	void spawnSquirt();
+
+	void updateDistanceMap(int i, int j, int steps);
+
+	int protesterLineOfSight(int px, int py);
+
+	bool processSquirtDamage(int sx, int sy);
+
+	bool processBoulderDamage(int bx, int by);
+
+	int findExit(int px, int py);
 
 	// cleanUp method must free any dynamically allocated data that was allocated during calls to the
 	// init() method or the move() method (will likely do the same thing as the destructor)

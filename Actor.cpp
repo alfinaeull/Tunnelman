@@ -120,6 +120,10 @@ void Boulder::doSomething()
 	// at any of those points, set state to dead
 	if (state == "falling") {
 
+		if (getWorld()->processBoulderDamage(getX(), getY()) == true)
+		{
+			getWorld()->increaseScore(400); //other 100 points from the protester class
+		}
 		if (currY - 1 < 0 || getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Boulder") || getWorld()->existingTerrain(currX, currY - 1, 4, 1, "Earth")) {
 
 			state = "dead";
@@ -282,6 +286,17 @@ void Tunnelman::doSomething()
 	}
 }
 
+int Tunnelman::getHealth()
+{
+	return hp;
+}
+
+void Tunnelman::decrementHealth(int hpLost)
+{
+	hp -= hpLost;
+	getWorld()->playSound(SOUND_PLAYER_ANNOYED);
+}
+
 int Tunnelman::getGoldCount()
 {
 	return goldCount;
@@ -352,6 +367,11 @@ void Squirt::doSomething()
 {
 	if (!(isAlive()))
 	{
+		return;
+	}
+	if (getWorld()->processSquirtDamage(getX(), getY()))
+	{
+		setState(false);
 		return;
 	}
 	GraphObject::Direction dir = getDirection();
@@ -516,13 +536,25 @@ void Sonar::doSomething()
 	}
 }
 
-Protester::Protester(int imageID, int startX = 30, int startY = 60, Direction dir = left, double size = 1.0, unsigned int depth = 0, StudentWorld* w)
-	: Object(TID_PROTESTER, startX, startY, dir, size, depth, w)
+void Protester::decrementHealth(int damage)
 {
-	currX = startX;
-	currY = startY;
-
-	state = "moving"; // moving, resting, or leave-the-oil-field
+	if (hp <= 0)
+	{
+		return;
+	}
+	if (damage < hp)
+	{
+		this->hp -= damage;
+		stunTimer = std::max(50, int(100 - getWorld()->getLevel() * 10));
+		getWorld()->playSound(SOUND_PROTESTER_ANNOYED);
+		return;
+	}
+	if (damage >= hp)
+	{
+		getWorld()->increaseScore(100);
+		state = "leaving";
+		return;
+	}
 }
 
 Protester::~Protester()
@@ -530,7 +562,162 @@ Protester::~Protester()
 
 }
 
-void Protester::doSomething()
+RegProtester::RegProtester(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
+	: Protester(TID_PROTESTER, startX, startY, dir, size, depth, w)
+{
+	hp = 5;
+	numSquaresToMoveInCurrentDirection = rand() % 53 + 8;
+}
+
+RegProtester::~RegProtester()
 {
 
+}
+
+void RegProtester::doSomething()
+{
+	// check if protester is alive
+	if (!isAlive())
+	{
+		return;
+	}
+
+	restTimer++;
+	int ticksToWaitBetweenMoves = std::max(0, int(3 - getWorld()->getLevel() / 4));
+	if (restTimer < ticksToWaitBetweenMoves)
+	{
+		return;
+	}
+	else
+	{
+		restTimer = 0;
+		shoutCooldown++;
+	}
+
+	if (state == "leaving")
+	{
+		if (getX() == 60 && getY() == 60)
+		{
+			setState(false);
+			return;
+		}
+		int dir;
+		dir = getWorld()->findExit(getX(), getY());
+		if (dir == GraphObject::up)
+		{
+			setDirection(GraphObject::up);
+			moveTo(getX(), getY() + 1);
+			return;
+		}
+		if (dir == GraphObject::down)
+		{
+			setDirection(GraphObject::down);
+			moveTo(getX(), getY() - 1);
+			return;
+		}
+		if (dir == GraphObject::right)
+		{
+			setDirection(GraphObject::right);
+			moveTo(getX() + 1, getY());
+			return;
+		}
+		if (dir == GraphObject::left)
+		{
+			setDirection(GraphObject::left);
+			moveTo(getX() - 1, getY());
+			return;
+		}
+	}
+
+	if (stunTimer > 0)
+	{
+		stunTimer--;
+		return;
+	}
+
+	int dir = getWorld()->protesterLineOfSight(getX(), getY());
+	if (dir != GraphObject::none)
+	{
+		if (dir == GraphObject::up)
+		{
+			setDirection(GraphObject::up);
+			moveTo(getX(), getY() + 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+		if (dir == GraphObject::down)
+		{
+			setDirection(GraphObject::down);
+			moveTo(getX(), getY() - 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+		if (dir == GraphObject::right)
+		{
+			setDirection(GraphObject::right);
+			moveTo(getX() + 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+		if (dir == GraphObject::left)
+		{
+			setDirection(GraphObject::left);
+			moveTo(getX() - 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			numSquaresToMoveInCurrentDirection = 0;
+			return;
+		}
+	}
+	if (shoutCooldown >= 15)
+	{
+		if (getWorld()->shoutAtTunnelman(getX(), getY()) == true)
+		{
+			getWorld()->playSound(SOUND_PROTESTER_YELL);
+			shoutCooldown = 0;
+		}
+		return;
+	}
+	dir = getDirection();
+	if (numSquaresToMoveInCurrentDirection != 0)
+	{
+		if (dir == GraphObject::up)
+		{
+			setDirection(GraphObject::up);
+			moveTo(getX(), getY() + 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			return;
+		}
+		if (dir == GraphObject::down)
+		{
+			setDirection(GraphObject::down);
+			moveTo(getX(), getY() - 1);
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			return;
+		}
+		if (dir == GraphObject::right)
+		{
+			setDirection(GraphObject::right);
+			moveTo(getX() + 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			return;
+		}
+		if (dir == GraphObject::left)
+		{
+			setDirection(GraphObject::left);
+			moveTo(getX() - 1, getY());
+			stepCount++;
+			getWorld()->updateDistanceMap(getX(), getY(), stepCount);
+			return;
+		}
+	}
 }

@@ -50,14 +50,14 @@ bool StudentWorld::existingTerrain(int i, int j, int width, int height, std::str
 	{
 		for (int y = j; y < j + height; y++)
 		{
-			if (s == "Boulder")
+			if (s == "Boulder" || s == "Any")
 			{
 				if (isBoulder[x][y] == true)
 				{
 					return true;
 				}
 			}
-			if (s == "Earth")
+			if (s == "Earth" || s == "Any")
 			{
 				if (clearedEarth[x][y] == false)
 				{
@@ -104,6 +104,13 @@ void StudentWorld::validatePosition(int& x, int& y)
 int StudentWorld::init()
 {
 	srand(time(0));
+	for (int i = 60; i < 64; i++)
+	{
+		for (int j = 60; j < 64; j++)
+		{
+			distanceMap[i][j] = 0;
+		}
+	}
 
 	int G = max(static_cast<int>(5 - getLevel() / 2), 2);
 	int L = min(static_cast<int>(2 + getLevel()), 21);
@@ -176,32 +183,33 @@ int StudentWorld::init()
 
 	}
 
+	actors.push_back(new RegProtester(60, 60, GraphObject::left, 1.0, 0, this));
+
 	return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::setDisplayText()
 {
 	int level = getLevel();
+	int health = tunnelman->getHealth();
 	int barrelsLeft = barrelCount;
 	int score = getScore();
 	int gold = tunnelman->getGoldCount();
 	int sonars = tunnelman->getSonarCount();
 	int squirts = tunnelman->getSquirtCount();
+	int lives = getLives();
 
-	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
-		to_string(gold) + " Sonars: " + to_string(sonars) + " Squirts: " + to_string(squirts);
+	string s = "Level: " + to_string(level) + " Health: " + to_string(health * 10) + "% Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
+		to_string(gold) + " Sonars: " + to_string(sonars) + " Squirts: " + to_string(squirts) + " Lives: " + to_string(lives);
 	setGameStatText(s);
 }
 
 // move method must, during each tick, ask your Tunnelman object to do something
 int StudentWorld::move()
 {
-	bool tunnelman_alive = true;
-
-	if (tunnelman_alive == false) {
-		// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
-		// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
+	if (tunnelman->getHealth() <= 0) {
 		decLives();
+		playSound(SOUND_PLAYER_GIVE_UP);
 		return GWSTATUS_PLAYER_DIED;
 	}
 
@@ -318,6 +326,19 @@ void StudentWorld::pickupObjectsNearPlayer()
 	}
 }
 
+// returns true if player took damage
+bool StudentWorld::shoutAtTunnelman(int px, int py)
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+	if (measureDistance(px, py, tx, ty) <= 4)
+	{
+		tunnelman->decrementHealth(2);
+		return true;
+	}
+	return false;
+}
+
 void StudentWorld::spawnGold()
 {
 	actors.push_back(new Gold(tunnelman->getX(), tunnelman->getY(), GraphObject::right, 1.0, 2, this, true));
@@ -359,6 +380,150 @@ void StudentWorld::spawnSquirt()
 	}
 
 	actors.push_back(new Squirt(spawnx, spawny, dir, 1.0, 1, this));
+}
+
+void StudentWorld::updateDistanceMap(int i, int j, int steps)
+{
+	if (distanceMap[i][j] > steps)
+	{
+		distanceMap[i][j] = steps;
+	}
+}
+
+// returns the direction the protester should move in
+int StudentWorld::protesterLineOfSight(int px, int py)
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+
+	if (measureDistance(tx, ty, px, py) <= 4.0)
+	{
+		return GraphObject::none;
+	}
+
+	if (tx == px)
+	{
+		if (ty > py)
+		{
+			if (existingTerrain(px, py, 4, ty - py, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::up;
+		}
+		else if (ty < py)
+		{
+			if (existingTerrain(tx, ty, 4, py - ty, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::down;
+		}
+	}
+	else if (ty == py)
+	{
+		if (tx > px)
+		{
+			if (existingTerrain(px, py, tx - px, 4, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::right;
+		}
+		else if (tx < px)
+		{
+			if (existingTerrain(tx, ty, px - tx, 4, "Any"))
+			{
+				return GraphObject::none;
+			}
+			return GraphObject::left;
+		}
+	}
+	return GraphObject::none;
+}
+
+// Returns true if damage was successful
+bool StudentWorld::processSquirtDamage(int sx, int sy)
+{
+	for (Object* actor : actors)
+	{
+		if (actor->canBeDamaged()) // tunnelman is not in this list
+		{
+			if (measureDistance(sx, sy, actor->getX(), actor->getY()) <= 3)
+			{
+				static_cast<Protester*>(actor)->decrementHealth(2);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool StudentWorld::processBoulderDamage(int bx, int by)
+{
+	for (Object* actor : actors)
+	{
+		if (actor->canBeDamaged()) // tunnelman is not in this list
+		{
+			if (measureDistance(bx, by, actor->getX(), actor->getY()) <= 4)
+			{
+				static_cast<Protester*>(actor)->decrementHealth(100);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+int StudentWorld::findExit(int px, int py)
+{
+	int lowestValue = 100;
+	GraphObject::Direction dir = GraphObject::none;
+	if (!existingTerrain(px, py + 4, 4, 1, "Any"))
+	{
+		for (int i = px; i < px + 4; i++)
+		{
+			if (distanceMap[i][py + 4] < lowestValue)
+			{
+				lowestValue = distanceMap[i][py + 4];
+				dir = GraphObject::up;
+			}
+		}
+	}
+	if (!existingTerrain(px + 4, py, 1, 4, "Any"))
+	{
+		for (int j = py; j < py + 4; j++)
+		{
+			if (distanceMap[px + 4][j] < lowestValue)
+			{
+				lowestValue = distanceMap[px + 4][j];
+				dir = GraphObject::right;
+			}
+		}
+	}
+	if (!existingTerrain(px, py - 1, 4, 1, "Any"))
+	{
+		for (int i = px; i < px + 4; i++)
+		{
+			if (distanceMap[i][py - 1] < lowestValue)
+			{
+				lowestValue = distanceMap[i][py - 1];
+				dir = GraphObject::down;
+			}
+		}
+	}
+	if (!existingTerrain(px - 1, py, 1, 4, "Any"))
+	{
+		for (int j = py - 1; j < py; j++)
+		{
+			if (distanceMap[px - 1][j] < lowestValue)
+			{
+				lowestValue = distanceMap[px - 1][j];
+				dir = GraphObject::left;
+			}
+		}
+	}
+	return dir;
 }
 
 // cleanUp method must free any dynamically allocated data that was allocated during calls to the

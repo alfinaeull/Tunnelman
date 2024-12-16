@@ -3,6 +3,7 @@
 
 #include "GraphObject.h"
 #include "StudentWorld.h"
+#include <string>
 
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
@@ -25,6 +26,9 @@ public:
 
 	// used to identify classes gold and barrel which are not initially visible to player
 	virtual bool canBeRevealed() { return false; }
+
+	// used to identify classes like protesters and tunnelman who can be annoyed
+	virtual bool canBeDamaged() { return false; }
 
 	// returns pointer to StudentWorld
 	StudentWorld* getWorld() const;
@@ -56,6 +60,7 @@ class Tunnelman : public Object {
 private:
 	int currX;
 	int currY;
+	int hp = 10;
 	int goldCount = 0;
 	int sonarCount = 1;
 	int squirtCount = 5;
@@ -67,6 +72,10 @@ public:
 	// destructor
 	~Tunnelman();
 
+	int getHealth();
+
+	void decrementHealth(int hpLost);
+
 	int getGoldCount();
 
 	void incrementGoldCount();
@@ -74,8 +83,6 @@ public:
 	int getSonarCount();
 
 	void incrementSonarCount();
-
-	int getSquirtCount();
 
 	// doSomething method
 	void doSomething();
@@ -85,6 +92,10 @@ public:
 	void useSonar();
 
 	void shootSquirt();
+
+	int getSquirtCount();
+
+	bool canBeDamaged() { return true; }
 };
 
 class Squirt : public Object {
@@ -194,10 +205,13 @@ public:
 
 // base class for RegularProtester and HardcoreProtester
 class Protester : public Object {
-private:
+protected:
 	int numSquaresToMoveInCurrentDirection = 0;
-
-	int hit_pts = 0;
+	int restTimer = 0;
+	int stepCount = 0;
+	int hp = 0;
+	int shoutCooldown = 0;
+	int stunTimer = 0;
 
 	std::string state;
 
@@ -206,14 +220,32 @@ private:
 
 public:
 	// constructor
-	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
+	Protester(int imageID, int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w)
+		: Object(imageID, startX, startY, dir, size, depth, w)
+	{
+		currX = startX;
+		currY = startY;
+		state = "moving";
+	}
+
+	void decrementHealth(int damage);
+
+	bool canBeDamaged() { return true; }
 
 	// destructor
 	~Protester();
+};
 
-	virtual void doSomething();
+class RegProtester : public Protester {
+private:
+public:
+	// constructor
+	RegProtester(int startX, int startY, Direction dir, double size, unsigned int depth, StudentWorld* w);
 
+	// destructor
+	~RegProtester();
 
+	void doSomething();
 };
 
 #endif // ACTOR_H_
