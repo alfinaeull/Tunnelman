@@ -57,6 +57,7 @@ class Tunnelman : public Object {
 private:
 	int currX;
 	int currY;
+	int hp = 10;
 	int goldCount = 0;
 	int sonarCount = 1;
 	int squirtCount = 5;
@@ -68,6 +69,10 @@ public:
 	// destructor
 	~Tunnelman();
 
+	int getHealth();
+
+	void decrementHealth(int hpLost);
+
 	int getGoldCount();
 
 	void incrementGoldCount();
@@ -75,8 +80,6 @@ public:
 	int getSonarCount();
 
 	void incrementSonarCount();
-
-	int getSquirtCount();
 
 	// doSomething method
 	void doSomething();
@@ -86,6 +89,8 @@ public:
 	void useSonar();
 
 	void shootSquirt();
+
+	int getSquirtCount();
 };
 
 class Squirt : public Object {
@@ -200,6 +205,7 @@ protected:
 	int restTimer = 0;
 	int stepCount = 0;
 	int hit_pts = 0;
+	int shoutCooldown = 0;
 
 	std::string state;
 

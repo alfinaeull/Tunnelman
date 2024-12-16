@@ -50,14 +50,14 @@ bool StudentWorld::existingTerrain(int i, int j, int width, int height, std::str
 	{
 		for (int y = j; y < j + height; y++)
 		{
-			if (s == "Boulder")
+			if (s == "Boulder" || s == "Any")
 			{
 				if (isBoulder[x][y] == true)
 				{
 					return true;
 				}
 			}
-			if (s == "Earth")
+			if (s == "Earth" || s == "Any")
 			{
 				if (clearedEarth[x][y] == false)
 				{
@@ -184,26 +184,25 @@ int StudentWorld::init()
 void StudentWorld::setDisplayText()
 {
 	int level = getLevel();
+	int health = tunnelman->getHealth();
 	int barrelsLeft = barrelCount;
 	int score = getScore();
 	int gold = tunnelman->getGoldCount();
 	int sonars = tunnelman->getSonarCount();
 	int squirts = tunnelman->getSquirtCount();
+	int lives = getLives();
 
-	string s = "Level: " + to_string(level) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
-		to_string(gold) + " Sonars: " + to_string(sonars) + " Squirts: " + to_string(squirts);
+	string s = "Level: " + to_string(level) + " Health: " + to_string(health) + " Barrels Left: " + to_string(barrelsLeft) + " Score: " + to_string(score) + " Gold: " +
+		to_string(gold) + " Sonars: " + to_string(sonars) + " Squirts: " + to_string(squirts) + " Lives: " + to_string(lives);
 	setGameStatText(s);
 }
 
 // move method must, during each tick, ask your Tunnelman object to do something
 int StudentWorld::move()
 {
-	bool tunnelman_alive = true;
-
-	if (tunnelman_alive == false) {
-		// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
-		// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
+	if (tunnelman->getHealth() <= 0) {
 		decLives();
+		playSound(SOUND_PLAYER_GIVE_UP);
 		return GWSTATUS_PLAYER_DIED;
 	}
 
@@ -318,6 +317,19 @@ void StudentWorld::pickupObjectsNearPlayer()
 			}
 		}
 	}
+}
+
+// returns true if player took damage
+bool StudentWorld::shoutAtTunnelman(int px, int py)
+{
+	int tx = tunnelman->getX();
+	int ty = tunnelman->getY();
+	if (measureDistance(px, py, tx, ty) <= 4)
+	{
+		tunnelman->decrementHealth(2);
+		return true;
+	}
+	return false;
 }
 
 void StudentWorld::spawnGold()

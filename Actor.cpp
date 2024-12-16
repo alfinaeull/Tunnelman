@@ -282,6 +282,17 @@ void Tunnelman::doSomething()
 	}
 }
 
+int Tunnelman::getHealth()
+{
+	return hp;
+}
+
+void Tunnelman::decrementHealth(int hpLost)
+{
+	hp -= hpLost;
+	getWorld()->playSound(SOUND_PLAYER_ANNOYED);
+}
+
 int Tunnelman::getGoldCount()
 {
 	return goldCount;
@@ -534,20 +545,23 @@ RegProtester::~RegProtester()
 
 void RegProtester::doSomething()
 {
+	// check if protester is alive
 	if (!isAlive())
 	{
 		return;
 	}
+	restTimer++;
 	// std::max(50, int(100 - getWorld()->getLevel() * 10)); 
+	// check if protester should be resting
 	int ticksToWaitBetweenMoves = std::max(0, int(3 - getWorld()->getLevel() / 4));
 	if (restTimer < ticksToWaitBetweenMoves)
 	{
-		restTimer++;
 		return;
 	}
 	else
 	{
 		restTimer = 0;
+		shoutCooldown++;
 	}
 
 	int dir = getWorld()->protesterLineOfSight(getX(), getY());
@@ -577,5 +591,14 @@ void RegProtester::doSomething()
 			moveTo(getX() - 1, getY());
 			return;
 		}
+	}
+	if (shoutCooldown >= 15)
+	{
+		if (getWorld()->shoutAtTunnelman(getX(), getY()) == true)
+		{
+			getWorld()->playSound(SOUND_PROTESTER_YELL);
+			shoutCooldown = 0;
+		}
+		return;
 	}
 }

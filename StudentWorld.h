@@ -57,6 +57,8 @@ public:
 
 	void pickupObjectsNearPlayer();
 
+	bool shoutAtTunnelman(int px, int py);
+
 	void spawnGold();
 
 	void spawnSquirt();
